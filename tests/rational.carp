@@ -1,0 +1,14 @@
+(load "rational.carp")
+(load "Test.carp")
+
+(use-all Rational Test)
+
+(defn main []
+  (with-test test
+    (assert-equal test
+                  &(init 1 4)
+                  &(from-float 0.25f)
+                  "can covert correctly from float"
+    )
+  )
+)

@@ -1,0 +1,42 @@
+(deftype Rational [numerator Int, denominator Int])
+
+(defmodule Math
+  (defn gcd [a b]
+    (if (= b 0)
+      a
+      (gcd b (Int.mod a b))))
+)
+
+(defmodule Rational
+  (defn from-int [i]
+    (Rational.init i 0))
+
+  (defn to-int [r]
+    (/ @(numerator r) @(denominator r)))
+
+  (defn from-float [f]
+    (let-do [t 1
+             t2 f]
+      (while (/= t2 (Float.from-int (Float.to-int t2)))
+        (do
+          (set! t (* t 10))
+          (set! t2 (* f (Float.from-int t)))))
+      (let [fk (Float.to-int (* f (Float.from-int t)))
+            k (Math.gcd fk t)]
+        (Rational.init (/ fk k) (/ t k)))))
+
+  (defn to-float [r]
+    (/ (Float.from-int @(numerator r)) (Float.from-int @(denominator r))))
+
+  ; TODO
+  ;(defn + [])
+  ;(defn - [])
+  ;(defn * [])
+  ;(defn / [])
+  (defn = [a b]
+    (and (= (numerator a) (numerator b))
+         (= (denominator a) (denominator b))))
+
+  (defn str [r]
+    (fmt "(Rational %d/%d)" @(numerator r) @(denominator r)))
+)
