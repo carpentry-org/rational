@@ -8,8 +8,12 @@
 )
 
 (defmodule Rational
+  (defn new [n d]
+    (let [g (Math.gcd n d)]
+      (Rational.init (/ n g) (/ d g))))
+
   (defn from-int [i]
-    (Rational.init i 0))
+    (Rational.init i 1))
 
   (defn to-int [r]
     (/ @(numerator r) @(denominator r)))
@@ -23,19 +27,63 @@
           (set! t2 (* f (Float.from-int t)))))
       (let [fk (Float.to-int (* f (Float.from-int t)))
             k (Math.gcd fk t)]
-        (Rational.init (/ fk k) (/ t k)))))
+        (Rational.new (/ fk k) (/ t k)))))
 
   (defn to-float [r]
     (/ (Float.from-int @(numerator r)) (Float.from-int @(denominator r))))
 
-  ; TODO
-  ;(defn + [])
-  ;(defn - [])
-  ;(defn * [])
-  ;(defn / [])
+  (defn + [a b]
+    (let [na @(numerator a)
+          nb @(numerator b)
+          da @(denominator a)
+          db @(denominator b)
+          n (+ (* na db) (* nb da))
+          d (* da db)]
+      (Rational.new n d))
+  )
+
+  (defn - [a b]
+    (let [na @(numerator a)
+          nb @(numerator b)
+          da @(denominator a)
+          db @(denominator b)
+          n (- (* na db) (* nb da))
+          d (* da db)]
+      (Rational.new n d))
+  )
+
+  (defn * [a b]
+    (let [na @(numerator a)
+          nb @(numerator b)
+          da @(denominator a)
+          db @(denominator b)
+          n (* na nb)
+          d (* da db)]
+      (Rational.new n d))
+  )
+
+  (defn / [a b]
+    (let [na @(numerator a)
+          nb @(numerator b)
+          da @(denominator a)
+          db @(denominator b)
+          n (* na db)
+          d (* da nb)]
+      (Rational.new n d))
+  )
+
+  (defn mod [a b]
+    (let [m (Rational./ a b)]
+      (Rational.* &(Rational.- a b) &m)))
+
   (defn = [a b]
     (and (= (numerator a) (numerator b))
          (= (denominator a) (denominator b))))
+
+  (defn hash [r]
+    (if (= 1 @(denominator r))
+      (hash (numerator r))
+      (hash &(to-float r))))
 
   (defn str [r]
     (fmt "(Rational %d/%d)" @(numerator r) @(denominator r)))
