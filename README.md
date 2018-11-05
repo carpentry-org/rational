@@ -1,7 +1,5 @@
 # rational
 
-*WIP. The readme is a lie.*
-
 Rational numbers (a.k.a fractions) for Carp.
 
 Fractions are expressed as pairs of integers. Mathemtical operations and
