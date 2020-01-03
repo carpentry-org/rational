@@ -1,0 +1,552 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="content">
+            <div class="logo">
+                <a href="http://github.com/carp-lang/Carp">
+                    <img src="logo.png">
+                </a>
+                <div class="title">
+                    Rational
+                </div>
+                <div class="index">
+                    <ul>
+                        <li>
+                            <a href="Rational.html">
+                                Rational
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h1>
+                Rational
+            </h1>
+            <div class="module-description">
+                <p>A module for rational numbers in Carp.</p>
+<p>Fractions are expressed as pairs of integers: a numerator and a denominator.
+Mathematical operations and conversion primitives to and from integers and
+floating point numbers are provided.</p>
+<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.1&quot;)
+
+(Rational.new 22 12) ; =&gt; (Rational 11/6)
+(* (Rational.new 22 12) (Rational.new 1 6)) ; =&gt; (Rational 2/1)
+(to-int (Rational.new 2 1)) ; =&gt; 2
+(to-float (Rational.new 1 4)) ; =&gt; 0.25
+(to-double (Rational.new 1 4)) ; =&gt; 0.25
+</code></pre>
+
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#=">
+                    <h3 id="=">
+                        =
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Bool)
+                </p>
+                <pre class="args">
+                    (= a b)
+                </pre>
+                <p class="doc">
+                    <p>compares two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#add">
+                    <h3 id="add">
+                        add
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                </p>
+                <pre class="args">
+                    (add a b)
+                </pre>
+                <p class="doc">
+                    <p>adds two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#copy">
+                    <h3 id="copy">
+                        copy
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] Rational)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>copies a <code>Rational</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#denominator">
+                    <h3 id="denominator">
+                        denominator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] &amp;Int)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>gets the <code>denominator</code> property of a <code>Rational</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#div">
+                    <h3 id="div">
+                        div
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                </p>
+                <pre class="args">
+                    (div a b)
+                </pre>
+                <p class="doc">
+                    <p>divides two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#from-double">
+                    <h3 id="from-double">
+                        from-double
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [Double] Rational)
+                </p>
+                <pre class="args">
+                    (from-double f)
+                </pre>
+                <p class="doc">
+                    <p>builds a <code>Rational</code> from a <code>Double</code> <code>d</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#from-float">
+                    <h3 id="from-float">
+                        from-float
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [Float] Rational)
+                </p>
+                <pre class="args">
+                    (from-float f)
+                </pre>
+                <p class="doc">
+                    <p>builds a <code>Rational</code> from a <code>Float</code> <code>f</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#from-int">
+                    <h3 id="from-int">
+                        from-int
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [Int] Rational)
+                </p>
+                <pre class="args">
+                    (from-int i)
+                </pre>
+                <p class="doc">
+                    <p>builds a <code>Rational</code> from an <code>Integer</code> <code>i</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#hash">
+                    <h3 id="hash">
+                        hash
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] Int)
+                </p>
+                <pre class="args">
+                    (hash r)
+                </pre>
+                <p class="doc">
+                    <p>calculates the hash of the <code>Rational</code> <code>r</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#modulo">
+                    <h3 id="modulo">
+                        modulo
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                </p>
+                <pre class="args">
+                    (modulo a b)
+                </pre>
+                <p class="doc">
+                    <p>calculates the modulo of two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#mul">
+                    <h3 id="mul">
+                        mul
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                </p>
+                <pre class="args">
+                    (mul a b)
+                </pre>
+                <p class="doc">
+                    <p>multiplies two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#new">
+                    <h3 id="new">
+                        new
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [Int, Int] Rational)
+                </p>
+                <pre class="args">
+                    (new n d)
+                </pre>
+                <p class="doc">
+                    <p>builds a <code>Rational</code> from a numerator <code>n</code> and a denominator <code>d</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#numerator">
+                    <h3 id="numerator">
+                        numerator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] &amp;Int)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>gets the <code>numerator</code> property of a <code>Rational</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#prn">
+                    <h3 id="prn">
+                        prn
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] String)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>converts a <code>Rational</code> to a string.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-denominator">
+                    <h3 id="set-denominator">
+                        set-denominator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [Rational, Int] Rational)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>denominator</code> property of a <code>Rational</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-denominator!">
+                    <h3 id="set-denominator!">
+                        set-denominator!
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), Int] ())
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>denominator</code> property of a <code>Rational</code> in place.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-numerator">
+                    <h3 id="set-numerator">
+                        set-numerator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [Rational, Int] Rational)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>numerator</code> property of a <code>Rational</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-numerator!">
+                    <h3 id="set-numerator!">
+                        set-numerator!
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), Int] ())
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>numerator</code> property of a <code>Rational</code> in place.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#str">
+                    <h3 id="str">
+                        str
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] String)
+                </p>
+                <pre class="args">
+                    (str r)
+                </pre>
+                <p class="doc">
+                    <p>stringifies the <code>Rational</code> <code>r</code>. The format is
+<code>(Rational &lt;numerator&gt;/&lt;denominator&gt;)</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#sub">
+                    <h3 id="sub">
+                        sub
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                </p>
+                <pre class="args">
+                    (sub a b)
+                </pre>
+                <p class="doc">
+                    <p>subtracts two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#to-double">
+                    <h3 id="to-double">
+                        to-double
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] Double)
+                </p>
+                <pre class="args">
+                    (to-double r)
+                </pre>
+                <p class="doc">
+                    <p>converts a <code>Rational</code> <code>r</code> to a <code>Double</code>.</p>
+<p>This function might incur a precision loss.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#to-float">
+                    <h3 id="to-float">
+                        to-float
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] Float)
+                </p>
+                <pre class="args">
+                    (to-float r)
+                </pre>
+                <p class="doc">
+                    <p>converts a <code>Rational</code> <code>r</code> to a <code>Float</code>.</p>
+<p>This function might incur a precision loss.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#to-int">
+                    <h3 id="to-int">
+                        to-int
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref Rational)] Int)
+                </p>
+                <pre class="args">
+                    (to-int r)
+                </pre>
+                <p class="doc">
+                    <p>converts a <code>Rational</code> <code>r</code> to an <code>Integer</code>.</p>
+<p>This function might incur a precision loss.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#update-denominator">
+                    <h3 id="update-denominator">
+                        update-denominator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [Rational, (Ref (λ [Int] Int))] Rational)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>updates the <code>denominator</code> property of a <code>Rational</code> using a function <code>f</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#update-numerator">
+                    <h3 id="update-numerator">
+                        update-numerator
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [Rational, (Ref (λ [Int] Int))] Rational)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>updates the <code>numerator</code> property of a <code>Rational</code> using a function <code>f</code>.</p>
+
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

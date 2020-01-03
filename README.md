@@ -9,16 +9,16 @@ provided.
 ## Installation
 
 ```clojure
-(load "git@github.com:carpentry-org/rational@0.1")
+(load "git@github.com:carpentry-org/rational@0.2")
 ```
 
 ## Usage
 
 ```clojure
-(load "rational.carp")
+(load "git@github.com:carpentry-org/rational@0.2")
 
 (Rational.new 22 12) ; => (Rational 11/6)
-(Rational.* (Rational.new 22 12) (Rational.new 1 6)) ; => (Rational 2/1)
+(Rational.mul (Rational.new 22 12) (Rational.new 1 6)) ; => (Rational 2/1)
 (Rational.to-int (Rational.new 2 1)) ; => 2
 (Rational.to-float (Rational.new 1 4)) ; => 0.25
 ```

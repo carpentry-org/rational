@@ -1,23 +1,47 @@
 (deftype Rational [numerator Int, denominator Int])
 
-(defmodule Math
+(doc Rational "A module for rational numbers in Carp.
+
+Fractions are expressed as pairs of integers: a numerator and a denominator.
+Mathematical operations and conversion primitives to and from integers and
+floating point numbers are provided.
+
+```
+(load \"git@github.com:carpentry-org/rational@0.1\")
+
+(Rational.new 22 12) ; => (Rational 11/6)
+(* (Rational.new 22 12) (Rational.new 1 6)) ; => (Rational 2/1)
+(to-int (Rational.new 2 1)) ; => 2
+(to-float (Rational.new 1 4)) ; => 0.25
+(to-double (Rational.new 1 4)) ; => 0.25
+```")
+(defmodule Rational
   (defn gcd [a b]
     (if (= b 0)
       a
-      (gcd b (Int.mod a b))))
-)
+      (gcd b (mod a b))))
+  (private gcd)
+  (hidden gcd)
 
-(defmodule Rational
+  (private init)
+  (hidden init)
+
+  (doc new "builds a `Rational` from a numerator `n` and a denominator `d`.")
   (defn new [n d]
-    (let [g (Math.gcd n d)]
-      (Rational.init (/ n g) (/ d g))))
+    (let [g (gcd n d)]
+      (init (/ n g) (/ d g))))
 
+  (doc from-int "builds a `Rational` from an `Integer` `i`.")
   (defn from-int [i]
-    (Rational.init i 1))
+    (init i 1))
 
+  (doc to-int "converts a `Rational` `r` to an `Integer`.
+
+This function might incur a precision loss.")
   (defn to-int [r]
     (/ @(numerator r) @(denominator r)))
 
+  (doc from-float "builds a `Rational` from a `Float` `f`.")
   (defn from-float [f]
     (let-do [t 1
              t2 f]
@@ -26,65 +50,99 @@
           (set! t (* t 10))
           (set! t2 (* f (Float.from-int t)))))
       (let [fk (Float.to-int (* f (Float.from-int t)))
-            k (Math.gcd fk t)]
-        (Rational.new (/ fk k) (/ t k)))))
+            k (gcd fk t)]
+        (new (/ fk k) (/ t k)))))
 
+  (doc to-float "converts a `Rational` `r` to a `Float`.
+
+This function might incur a precision loss.")
   (defn to-float [r]
     (/ (Float.from-int @(numerator r)) (Float.from-int @(denominator r))))
 
-  (defn + [a b]
+  (doc from-double "builds a `Rational` from a `Double` `d`.")
+  (defn from-double [f]
+    (let-do [t 1
+             t2 f]
+      (while (not (Double.approx t2 (Double.from-int (Double.to-int t2))))
+        (do
+          (set! t (* t 10))
+          (set! t2 (* f (Double.from-int t)))))
+      (let [fk (Double.to-int (* f (Double.from-int t)))
+            k (gcd fk t)]
+        (new (/ fk k) (/ t k)))))
+
+  (doc to-double "converts a `Rational` `r` to a `Double`.
+
+This function might incur a precision loss.")
+  (defn to-double [r]
+    (/ (Double.from-int @(numerator r)) (Double.from-int @(denominator r))))
+
+  (doc add "adds two `Rational`s `a` and `b`.")
+  (defn add [a b]
     (let [na @(numerator a)
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
           n (+ (* na db) (* nb da))
           d (* da db)]
-      (Rational.new n d))
+      (new n d))
   )
 
-  (defn - [a b]
+  (doc sub "subtracts two `Rational`s `a` and `b`.")
+  (defn sub [a b]
     (let [na @(numerator a)
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
           n (- (* na db) (* nb da))
           d (* da db)]
-      (Rational.new n d))
+      (new n d))
   )
 
-  (defn * [a b]
+  (doc mul "multiplies two `Rational`s `a` and `b`.")
+  (defn mul [a b]
     (let [na @(numerator a)
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
           n (* na nb)
           d (* da db)]
-      (Rational.new n d))
+      (new n d))
   )
 
-  (defn / [a b]
+  (doc div "divides two `Rational`s `a` and `b`.")
+  (defn div [a b]
     (let [na @(numerator a)
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (* na db)
+          n (/ na db)
           d (* da nb)]
-      (Rational.new n d))
+      (new n d))
   )
 
-  (defn mod [a b]
-    (let [m (Rational./ a b)]
-      (Rational.* &(Rational.- a b) &m)))
+  (doc modulo "calculates the modulo of two `Rational`s `a` and `b`.")
+  (defn modulo [a b]
+    (let [na @(numerator a)
+          nb @(numerator b)
+          da @(denominator a)
+          db @(denominator b)
+          n (from-int (/ (* na db) (* nb da)))]
+      (sub a &(mul &n b))))
 
+  (doc = "compares two `Rational`s `a` and `b`.")
   (defn = [a b]
     (and (= (numerator a) (numerator b))
          (= (denominator a) (denominator b))))
 
+  (doc hash "calculates the hash of the `Rational` `r`.")
   (defn hash [r]
     (if (= 1 @(denominator r))
       (hash (numerator r))
       (hash &(to-float r))))
 
+  (doc str "stringifies the `Rational` `r`. The format is
+`(Rational <numerator>/<denominator>)`.")
   (defn str [r]
     (fmt "(Rational %d/%d)" @(numerator r) @(denominator r)))
 )

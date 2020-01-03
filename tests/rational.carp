@@ -8,36 +8,56 @@
     (assert-equal test
                   &(new 1 4)
                   &(from-float 0.25f)
-                  "can covert correctly from float"
+                  "can convert correctly from float"
+    )
+    (assert-equal test
+                  0.25f
+                  (to-float &(new 1 4))
+                  "can convert correctly to float"
+    )
+    (assert-equal test
+                  &(new 1 4)
+                  &(from-double 0.25)
+                  "can convert correctly from double"
+    )
+    (assert-equal test
+                  0.25
+                  (to-double &(new 1 4))
+                  "can convert correctly to double"
     )
     (assert-equal test
                   &(new 12 1)
                   &(from-int 12)
-                  "can covert correctly from int"
+                  "can convert correctly from int"
+    )
+    (assert-equal test
+                  1
+                  (to-int &(new 1 1))
+                  "can convert correctly to int"
     )
     (assert-equal test
                   &(new 11 18)
-                  &(Rational.+ &(new 1 9) &(new 3 6))
+                  &(add &(new 1 9) &(new 3 6))
                   "can add correctly"
     )
     (assert-equal test
                   &(new 5 3)
-                  &(Rational.- &(new 6 3) &(new 2 6))
+                  &(sub &(new 6 3) &(new 2 6))
                   "can subtract correctly"
     )
     (assert-equal test
                   &(new 3 4)
-                  &(Rational./ &(new 3 1) &(new 8 2))
+                  &(div &(new 3 1) &(new 8 2))
                   "can divide correctly"
     )
     (assert-equal test
                   &(new 3 16)
-                  &(Rational.* &(new 1 8) &(new 3 2))
+                  &(mul &(new 1 8) &(new 3 2))
                   "can multiply correctly"
     )
     (assert-equal test
-                  &(new 132 25)
-                  &(Rational.mod &(new 12 5) &(new 3 4))
+                  &(new 3 20)
+                  &(modulo &(new 12 5) &(new 3 4))
                   "can modulo correctly"
     )
     (assert-equal test
