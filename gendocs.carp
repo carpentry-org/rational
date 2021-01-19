@@ -1,13 +1,10 @@
 (load "rational.carp")
 
-(defndynamic gendocs []
-       (do
-         (Project.config "title" "Rational")
-         (Project.config "docs-directory" "./docs/")
-         (Project.config "docs-logo" "")
-         (Project.config "docs-styling" "style.css")
-         (Project.config "docs-generate-index" false)
-         (save-docs Rational)))
+(Project.config "title" "Rational")
+(Project.config "docs-directory" "./docs/")
+(Project.config "docs-logo" "")
+(Project.config "docs-styling" "style.css")
+(Project.config "docs-generate-index" false)
+(save-docs Rational)
 
-(gendocs)
 (quit)

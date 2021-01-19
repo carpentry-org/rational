@@ -9,13 +9,13 @@ provided.
 ## Installation
 
 ```clojure
-(load "git@github.com:carpentry-org/rational@0.2")
+(load "git@github.com:carpentry-org/rational@0.3")
 ```
 
 ## Usage
 
 ```clojure
-(load "git@github.com:carpentry-org/rational@0.2")
+(load "git@github.com:carpentry-org/rational@0.3")
 
 (Rational.new 22 12) ; => (Rational 11/6)
 (Rational.mul (Rational.new 22 12) (Rational.new 1 6)) ; => (Rational 2/1)

@@ -9,8 +9,8 @@
     <body>
         <div class="content">
             <div class="logo">
-                <a href="http://github.com/carp-lang/Carp">
-                    <img src="logo.png">
+                <a href="">
+                    <img src="">
                 </a>
                 <div class="title">
                     Rational
@@ -33,7 +33,7 @@
 <p>Fractions are expressed as pairs of integers: a numerator and a denominator.
 Mathematical operations and conversion primitives to and from integers and
 floating point numbers are provided.</p>
-<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.1&quot;)
+<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.3&quot;)
 
 (Rational.new 22 12) ; =&gt; (Rational 11/6)
 (* (Rational.new 22 12) (Rational.new 1 6)) ; =&gt; (Rational 2/1)
@@ -53,7 +53,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Bool)
+                    (Fn [(Ref Rational a), (Ref Rational a)] Bool)
                 </p>
                 <pre class="args">
                     (= a b)
@@ -73,7 +73,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                    (Fn [(Ref Rational a), (Ref Rational b)] Rational)
                 </p>
                 <pre class="args">
                     (add a b)
@@ -93,7 +93,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] Rational)
+                    (Fn [(Ref Rational a)] Rational)
                 </p>
                 <span>
                     
@@ -113,7 +113,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] &amp;Int)
+                    (Fn [(Ref Rational a)] (Ref Int a))
                 </p>
                 <span>
                     
@@ -133,7 +133,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                    (Fn [(Ref Rational a), (Ref Rational b)] Rational)
                 </p>
                 <pre class="args">
                     (div a b)
@@ -153,7 +153,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [Double] Rational)
+                    (Fn [Double] Rational)
                 </p>
                 <pre class="args">
                     (from-double f)
@@ -173,7 +173,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [Float] Rational)
+                    (Fn [Float] Rational)
                 </p>
                 <pre class="args">
                     (from-float f)
@@ -193,7 +193,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [Int] Rational)
+                    (Fn [Int] Rational)
                 </p>
                 <pre class="args">
                     (from-int i)
@@ -213,7 +213,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] Int)
+                    (Fn [(Ref Rational a)] Int)
                 </p>
                 <pre class="args">
                     (hash r)
@@ -233,7 +233,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                    (Fn [(Ref Rational a), (Ref Rational b)] Rational)
                 </p>
                 <pre class="args">
                     (modulo a b)
@@ -253,7 +253,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                    (Fn [(Ref Rational a), (Ref Rational b)] Rational)
                 </p>
                 <pre class="args">
                     (mul a b)
@@ -273,7 +273,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [Int, Int] Rational)
+                    (Fn [Int, Int] Rational)
                 </p>
                 <pre class="args">
                     (new n d)
@@ -293,7 +293,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] &amp;Int)
+                    (Fn [(Ref Rational a)] (Ref Int a))
                 </p>
                 <span>
                     
@@ -313,7 +313,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] String)
+                    (Fn [(Ref Rational a)] String)
                 </p>
                 <span>
                     
@@ -333,7 +333,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [Rational, Int] Rational)
+                    (Fn [Rational, Int] Rational)
                 </p>
                 <span>
                     
@@ -353,7 +353,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), Int] ())
+                    (Fn [(Ref Rational a), Int] ())
                 </p>
                 <span>
                     
@@ -373,7 +373,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [Rational, Int] Rational)
+                    (Fn [Rational, Int] Rational)
                 </p>
                 <span>
                     
@@ -393,7 +393,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), Int] ())
+                    (Fn [(Ref Rational a), Int] ())
                 </p>
                 <span>
                     
@@ -413,7 +413,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] String)
+                    (Fn [(Ref Rational a)] String)
                 </p>
                 <pre class="args">
                     (str r)
@@ -434,7 +434,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational), (Ref Rational)] Rational)
+                    (Fn [(Ref Rational a), (Ref Rational b)] Rational)
                 </p>
                 <pre class="args">
                     (sub a b)
@@ -454,7 +454,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] Double)
+                    (Fn [(Ref Rational a)] Double)
                 </p>
                 <pre class="args">
                     (to-double r)
@@ -475,7 +475,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] Float)
+                    (Fn [(Ref Rational a)] Float)
                 </p>
                 <pre class="args">
                     (to-float r)
@@ -496,7 +496,7 @@ floating point numbers are provided.</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref Rational)] Int)
+                    (Fn [(Ref Rational a)] Int)
                 </p>
                 <pre class="args">
                     (to-int r)
@@ -517,7 +517,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [Rational, (Ref (λ [Int] Int))] Rational)
+                    (Fn [Rational, (Ref (Fn [Int] Int a) b)] Rational)
                 </p>
                 <span>
                     
@@ -537,7 +537,7 @@ floating point numbers are provided.</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [Rational, (Ref (λ [Int] Int))] Rational)
+                    (Fn [Rational, (Ref (Fn [Int] Int a) b)] Rational)
                 </p>
                 <span>
                     
