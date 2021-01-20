@@ -9,7 +9,7 @@ provided.
 ## Installation
 
 ```clojure
-(load "git@github.com:carpentry-org/rational@0.3")
+(load "git@github.com:carpentry-org/rational@0.4")
 ```
 
 ## Usage
