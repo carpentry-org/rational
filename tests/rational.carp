@@ -5,6 +5,7 @@
 
 (defn main []
   (with-test test
+    ; conversions
     (assert-equal test
       &(new 1 4)
       &(from-float 0.25f)
@@ -26,6 +27,16 @@
       &(from-int 12)
       "can convert correctly from int")
     (assert-equal test 1 (to-int &(new 1 1)) "can convert correctly to int")
+
+    ; normalization
+    (assert-equal test &(new 1 2) &(new 3 6) "new reduces to lowest terms")
+    (assert-equal test
+      &(new -1 2)
+      &(new 1 -2)
+      "new normalizes negative denominator")
+    (assert-equal test &(new 1 2) &(new -1 -2) "new normalizes double negative")
+
+    ; arithmetic
     (assert-equal test
       &(new 11 18)
       &(add &(new 1 9) &(new 3 6))
@@ -35,16 +46,43 @@
       &(sub &(new 6 3) &(new 2 6))
       "can subtract correctly")
     (assert-equal test
-      &(new 3 4)
-      &(div &(new 3 1) &(new 8 2))
-      "can divide correctly")
-    (assert-equal test
       &(new 3 16)
       &(mul &(new 1 8) &(new 3 2))
       "can multiply correctly")
     (assert-equal test
+      &(new 3 4)
+      &(div &(new 3 1) &(new 8 2))
+      "can divide correctly")
+    (assert-equal test
+      &(new 2 1)
+      &(div &(new 3 1) &(new 3 2))
+      "div with non-unit denominator")
+    (assert-equal test
+      &(new 5 6)
+      &(div &(new 1 3) &(new 2 5))
+      "div fractions by fractions")
+    (assert-equal test
       &(new 3 20)
       &(modulo &(new 12 5) &(new 3 4))
       "can modulo correctly")
+
+    ; comparison
+    (assert-true test (< &(new 1 3) &(new 1 2)) "< with same sign")
+    (assert-false test (< &(new 1 2) &(new 1 3)) "not < when greater")
+    (assert-false test (< &(new 1 2) &(new 1 2)) "not < when equal")
+    (assert-true test (> &(new 1 2) &(new 1 3)) "> works")
+    (assert-true test (< &(new -1 2) &(new 1 2)) "< with negative")
+
+    ; neg and abs
+    (assert-equal test &(new -3 4) &(neg (new 3 4)) "neg positive")
+    (assert-equal test &(new 3 4) &(neg (new -3 4)) "neg negative")
+    (assert-equal test &(new 3 4) &(abs (new -3 4)) "abs negative")
+    (assert-equal test &(new 3 4) &(abs (new 3 4)) "abs positive")
+
+    ; str and hash
     (assert-equal test "(Rational 3/2)" &(str &(new 3 2)) "can stringify")
+    (assert-equal test
+      "(Rational -1/2)"
+      &(str &(new 1 -2))
+      "stringify negative denominator normalizes")
     (assert-equal test 12 (hash &(new 12 1)) "can hash")))

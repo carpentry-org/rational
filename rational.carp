@@ -19,15 +19,24 @@ floating point numbers are provided.
 (to-double (Rational.new 1 4)) ; => 0.25
 ```")
 (defmodule Rational
-  (defn gcd [a b] (if (= b 0) a (gcd b (mod a b))))
+  (defn gcd [a b]
+    (let [x (Int.abs a)
+          y (Int.abs b)] (if (= y 0) x (gcd y (mod x y)))))
   (private gcd)
   (hidden gcd)
 
   (private init)
   (hidden init)
 
-  (doc new "builds a `Rational` from a numerator `n` and a denominator `d`.")
-  (defn new [n d] (let [g (gcd n d)] (init (/ n g) (/ d g))))
+  (doc new "builds a `Rational` from a numerator `n` and a denominator `d`.
+
+The resulting fraction is always in lowest terms. Negative denominators
+are normalized so the sign is carried by the numerator.")
+  (defn new [n d]
+    (let [g (gcd n d)
+          rn (/ n g)
+          rd (/ d g)]
+      (if (< rd 0) (init (Int.neg rn) (Int.neg rd)) (init rn rd))))
 
   (doc from-int "builds a `Rational` from an `Integer` `i`.")
   (defn from-int [i] (init i 1))
@@ -109,7 +118,7 @@ This function might incur a precision loss.")
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (/ na db)
+          n (* na db)
           d (* da nb)]
       (new n d)))
 
@@ -126,6 +135,24 @@ This function might incur a precision loss.")
   (defn = [a b]
     (and (= (numerator a) (numerator b)) (= (denominator a) (denominator b))))
   (implements = Rational.=)
+
+  (doc < "checks whether `Rational` `a` is less than `b`.")
+  (defn < [a b]
+    (Int.< (* @(numerator a) @(denominator b))
+           (* @(numerator b) @(denominator a))))
+  (implements < Rational.<)
+
+  (doc > "checks whether `Rational` `a` is greater than `b`.")
+  (defn > [a b] (< b a))
+  (implements > Rational.>)
+
+  (doc neg "negates the `Rational` `r`.")
+  (defn neg [r] (init (Int.neg @(numerator &r)) @(denominator &r)))
+  (implements neg Rational.neg)
+
+  (doc abs "returns the absolute value of the `Rational` `r`.")
+  (defn abs [r] (init (Int.abs @(numerator &r)) @(denominator &r)))
+  (implements abs Rational.abs)
 
   (doc hash "calculates the hash of the `Rational` `r`.")
   (defn hash [r]
