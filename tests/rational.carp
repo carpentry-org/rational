@@ -74,6 +74,82 @@
     (assert-equal test &(new 3 4) &(abs (new -3 4)) "abs negative")
     (assert-equal test &(new 3 4) &(abs (new 3 4)) "abs positive")
 
+    (assert-equal test &(new 2 1) &(floor (new 6 3)) "floor of an exact integer")
+    (assert-equal test
+      &(new 0 1)
+      &(floor (new 1 3))
+      "floor of a positive fraction")
+    (assert-equal test
+      &(new 3 1)
+      &(floor (new 7 2))
+      "floor rounds positive down")
+    (assert-equal test
+      &(new -1 1)
+      &(floor (new -1 3))
+      "floor of a negative fraction")
+    (assert-equal test
+      &(new -4 1)
+      &(floor (new -7 2))
+      "floor rounds negative toward -inf")
+    (assert-equal test
+      &(new -2 1)
+      &(floor (new -6 3))
+      "floor of a negative exact integer")
+
+    (assert-equal test &(new 2 1) &(ceil (new 6 3)) "ceil of an exact integer")
+    (assert-equal test
+      &(new 1 1)
+      &(ceil (new 1 3))
+      "ceil of a positive fraction")
+    (assert-equal test &(new 4 1) &(ceil (new 7 2)) "ceil rounds positive up")
+    (assert-equal test
+      &(new 0 1)
+      &(ceil (new -1 3))
+      "ceil of a negative fraction")
+    (assert-equal test
+      &(new -3 1)
+      &(ceil (new -7 2))
+      "ceil rounds negative toward +inf")
+
+    (assert-equal test &(new 2 1) &(round (new 6 3)) "round of an exact integer")
+    (assert-equal test
+      &(new 0 1)
+      &(round (new 1 3))
+      "round of a value below a half")
+    (assert-equal test
+      &(new 1 1)
+      &(round (new 2 3))
+      "round of a value above a half")
+    (assert-equal test
+      &(new 2 1)
+      &(round (new 3 2))
+      "round of a half goes away from zero")
+    (assert-equal test &(new 3 1) &(round (new 5 2)) "round of a larger half")
+    (assert-equal test
+      &(new -1 1)
+      &(round (new -2 3))
+      "round of a negative above a half")
+    (assert-equal test
+      &(new -2 1)
+      &(round (new -3 2))
+      "round of a negative half goes away from zero")
+    (assert-equal test
+      &(new -3 1)
+      &(round (new -5 2))
+      "round of a larger negative half")
+    (assert-equal test
+      &(new 1500000000 1)
+      &(round (new 1500000000 1))
+      "round of a large exact integer does not overflow")
+    (assert-equal test
+      &(new -1500000000 1)
+      &(round (new -1500000000 1))
+      "round of a large negative exact integer does not overflow")
+    (assert-equal test
+      &(new 1000000001 1)
+      &(round (new 2000000001 2))
+      "round of a large half rounds away from zero without overflow")
+
     (assert-equal test "(Rational 3/2)" &(str &(new 3 2)) "can stringify")
     (assert-equal test
       "(Rational -1/2)"

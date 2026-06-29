@@ -145,6 +145,27 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#ceil">
+                        <h3 id="ceil">
+                            ceil
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (ceil r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the smallest integer not less than the <code>Rational</code> <code>r</code>
+(rounding toward positive infinity) as a whole <code>Rational</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#copy">
                         <h3 id="copy">
                             copy
@@ -221,6 +242,27 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>divides two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#floor">
+                        <h3 id="floor">
+                            floor
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (floor r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the largest integer not greater than the <code>Rational</code> <code>r</code>
+(rounding toward negative infinity) as a whole <code>Rational</code>.</p>
 
                     </p>
                 </div>
@@ -427,6 +469,27 @@ are normalized so the sign is carried by the numerator.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#round">
+                        <h3 id="round">
+                            round
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (round r)
+                    </pre>
+                    <p class="doc">
+                        <p>rounds the <code>Rational</code> <code>r</code> to the nearest integer, with halves
+rounded away from zero, as a whole <code>Rational</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#set-denominator">
                         <h3 id="set-denominator">
                             set-denominator
@@ -606,7 +669,8 @@ are normalized so the sign is carried by the numerator.</p>
                     </pre>
                     <p class="doc">
                         <p>converts a <code>Rational</code> <code>r</code> to an <code>Integer</code>.</p>
-<p>This function might incur a precision loss.</p>
+<p>This function might incur a precision loss; it truncates toward zero. See
+<a href="#floor">floor</a>, <a href="#ceil">ceil</a>, and <a href="#round">round</a> for other rounding modes.</p>
 
                     </p>
                 </div>

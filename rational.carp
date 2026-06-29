@@ -44,9 +44,39 @@ are normalized so the sign is carried by the numerator.")
 
   (doc to-int "converts a `Rational` `r` to an `Integer`.
 
-This function might incur a precision loss.")
+This function might incur a precision loss; it truncates toward zero. See
+[floor](#floor), [ceil](#ceil), and [round](#round) for other rounding modes.")
   (defn to-int [r] (/ @(numerator r) @(denominator r)))
   (implements to-int Rational.to-int)
+
+  (doc floor "returns the largest integer not greater than the `Rational` `r`
+(rounding toward negative infinity) as a whole `Rational`.")
+  (defn floor [r]
+    (let [n @(numerator &r)
+          d @(denominator &r)
+          q (/ n d)]
+      (from-int (if (and (< n 0) (/= 0 (mod n d))) (dec q) q))))
+  (implements floor Rational.floor)
+
+  (doc ceil "returns the smallest integer not less than the `Rational` `r`
+(rounding toward positive infinity) as a whole `Rational`.")
+  (defn ceil [r]
+    (let [n @(numerator &r)
+          d @(denominator &r)
+          q (/ n d)]
+      (from-int (if (and (< 0 n) (/= 0 (mod n d))) (inc q) q))))
+  (implements ceil Rational.ceil)
+
+  (doc round "rounds the `Rational` `r` to the nearest integer, with halves
+rounded away from zero, as a whole `Rational`.")
+  (defn round [r]
+    (let [n @(numerator &r)
+          d @(denominator &r)
+          a (Int.abs n)
+          q (/ a d)
+          rem (mod a d)
+          m (if (>= rem (- d rem)) (inc q) q)]
+      (from-int (if (< n 0) (Int.neg m) m))))
 
   (doc from-float "builds a `Rational` from a `Float` `f`.")
   (defn from-float [f]
