@@ -22,6 +22,7 @@ provided.
 (Rational.to-int (Rational.new 2 1)) ; => 2
 (Rational.to-float (Rational.new 1 4)) ; => 0.25
 (Rational.floor (Rational.new 7 2)) ; => (Rational 3/1)
+(Rational.ceil (Rational.new 7 2)) ; => (Rational 4/1)
 (Rational.round (Rational.new 7 2)) ; => (Rational 4/1)
 ```
 

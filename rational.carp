@@ -72,7 +72,10 @@ rounded away from zero, as a whole `Rational`.")
   (defn round [r]
     (let [n @(numerator &r)
           d @(denominator &r)
-          m (/ (+ (* 2 (Int.abs n)) d) (* 2 d))]
+          a (Int.abs n)
+          q (/ a d)
+          rem (mod a d)
+          m (if (>= rem (- d rem)) (inc q) q)]
       (from-int (if (< n 0) (Int.neg m) m))))
 
   (doc from-float "builds a `Rational` from a `Float` `f`.")

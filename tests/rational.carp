@@ -137,6 +137,18 @@
       &(new -3 1)
       &(round (new -5 2))
       "round of a larger negative half")
+    (assert-equal test
+      &(new 1500000000 1)
+      &(round (new 1500000000 1))
+      "round of a large exact integer does not overflow")
+    (assert-equal test
+      &(new -1500000000 1)
+      &(round (new -1500000000 1))
+      "round of a large negative exact integer does not overflow")
+    (assert-equal test
+      &(new 1000000001 1)
+      &(round (new 2000000001 2))
+      "round of a large half rounds away from zero without overflow")
 
     (assert-equal test "(Rational 3/2)" &(str &(new 3 2)) "can stringify")
     (assert-equal test
