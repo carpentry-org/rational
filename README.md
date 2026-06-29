@@ -21,6 +21,8 @@ provided.
 (Rational.mul (Rational.new 22 12) (Rational.new 1 6)) ; => (Rational 2/1)
 (Rational.to-int (Rational.new 2 1)) ; => 2
 (Rational.to-float (Rational.new 1 4)) ; => 0.25
+(Rational.floor (Rational.new 7 2)) ; => (Rational 3/1)
+(Rational.round (Rational.new 7 2)) ; => (Rational 4/1)
 ```
 
 Please note that conversion can be lossy, because conversion to integer throws
