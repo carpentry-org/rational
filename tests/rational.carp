@@ -155,4 +155,61 @@
       "(Rational -1/2)"
       &(str &(new 1 -2))
       "stringify negative denominator normalizes")
-    (assert-equal test 12 (hash &(new 12 1)) "can hash")))
+    (assert-equal test 12 (hash &(new 12 1)) "can hash")
+
+    (assert-equal test
+      &(Maybe.Just (new 3 4))
+      &(Rational.from-string "3/4")
+      "from-string parses a simple fraction")
+    (assert-equal test
+      &(Maybe.Just (new 3 4))
+      &(Rational.from-string "6/8")
+      "from-string reduces to lowest terms")
+    (assert-equal test
+      &(Maybe.Just (new -2 7))
+      &(Rational.from-string "-2/7")
+      "from-string parses a negative numerator")
+    (assert-equal test
+      &(Maybe.Just (new -3 4))
+      &(Rational.from-string "6/-8")
+      "from-string normalizes a negative denominator")
+    (assert-equal test
+      &(Maybe.Just (new 5 1))
+      &(Rational.from-string "5")
+      "from-string parses a bare integer")
+    (assert-equal test
+      &(Maybe.Just (new -5 1))
+      &(Rational.from-string "-5")
+      "from-string parses a negative bare integer")
+    (assert-equal test
+      &(Maybe.Just (new 0 1))
+      &(Rational.from-string "0/4")
+      "from-string parses a zero numerator")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "")
+      "from-string rejects the empty string")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "/4")
+      "from-string rejects an empty numerator")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "3/")
+      "from-string rejects an empty denominator")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "3/0")
+      "from-string rejects a zero denominator")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "a/b")
+      "from-string rejects non-numeric input")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "3/4/5")
+      "from-string rejects too many components")
+    (assert-equal test
+      &(Maybe.Nothing)
+      &(Rational.from-string "abc")
+      "from-string rejects a non-numeric bare token")))

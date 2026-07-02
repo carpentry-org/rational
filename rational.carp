@@ -42,6 +42,37 @@ are normalized so the sign is carried by the numerator.")
   (defn from-int [i] (init i 1))
   (implements from-int Rational.from-int)
 
+  (doc from-string "parses a `Rational` from text: either a fraction like `3/4`
+or `-2/7`, or a bare integer like `5`. The result is reduced to lowest terms and
+its sign normalized onto the numerator, so `6/-8` yields `-3/4`. Returns
+`Nothing` for malformed input, an empty numerator or denominator, or a zero
+denominator.")
+  (defn from-string [s]
+    (let [parts (String.split-by s &[\/])
+          np (Array.length &parts)]
+      (cond
+        (Int.= np 1)
+          (let [ns (Array.unsafe-nth &parts 0)]
+            (if (String.empty? ns)
+              (Maybe.Nothing)
+              (match (Int.from-string ns)
+                (Maybe.Nothing) (Maybe.Nothing)
+                (Maybe.Just n) (Maybe.Just (from-int n)))))
+        (Int.= np 2)
+          (let [ns (Array.unsafe-nth &parts 0)
+                ds (Array.unsafe-nth &parts 1)]
+            (if (or (String.empty? ns) (String.empty? ds))
+              (Maybe.Nothing)
+              (match (Int.from-string ns)
+                (Maybe.Nothing) (Maybe.Nothing)
+                (Maybe.Just n)
+                  (match (Int.from-string ds)
+                    (Maybe.Nothing) (Maybe.Nothing)
+                    (Maybe.Just d)
+                      (if (Int.= d 0) (Maybe.Nothing) (Maybe.Just (new n d)))))))
+        (Maybe.Nothing))))
+  (implements from-string Rational.from-string)
+
   (doc to-int "converts a `Rational` `r` to an `Integer`.
 
 This function might incur a precision loss; it truncates toward zero. See

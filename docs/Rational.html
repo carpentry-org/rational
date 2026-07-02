@@ -327,6 +327,30 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#from-string">
+                        <h3 id="from-string">
+                            from-string
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref String a)] (Maybe Rational))
+                    </p>
+                    <pre class="args">
+                        (from-string s)
+                    </pre>
+                    <p class="doc">
+                        <p>parses a <code>Rational</code> from text: either a fraction like <code>3/4</code>
+or <code>-2/7</code>, or a bare integer like <code>5</code>. The result is reduced to lowest terms and
+its sign normalized onto the numerator, so <code>6/-8</code> yields <code>-3/4</code>. Returns
+<code>Nothing</code> for malformed input, an empty numerator or denominator, or a zero
+denominator.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#hash">
                         <h3 id="hash">
                             hash
