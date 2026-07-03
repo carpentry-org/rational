@@ -65,6 +65,26 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#&lt;=">
+                        <h3 id="&lt;=">
+                            &lt;=
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [a, a] Bool)
+                    </p>
+                    <pre class="args">
+                        (&lt;= a b)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>Rational</code> <code>a</code> is less than or equal to <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#=">
                         <h3 id="=">
                             =
@@ -101,6 +121,26 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>checks whether <code>Rational</code> <code>a</code> is greater than <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#&gt;=">
+                        <h3 id="&gt;=">
+                            &gt;=
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [a, a] Bool)
+                    </p>
+                    <pre class="args">
+                        (&gt;= a b)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>Rational</code> <code>a</code> is greater than or equal to <code>b</code>.</p>
 
                     </p>
                 </div>
@@ -162,6 +202,27 @@ floating point numbers are provided.</p>
                     <p class="doc">
                         <p>returns the smallest integer not less than the <code>Rational</code> <code>r</code>
 (rounding toward positive infinity) as a whole <code>Rational</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#clamp">
+                        <h3 id="clamp">
+                            clamp
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (clamp lo hi x)
+                    </pre>
+                    <p class="doc">
+                        <p>clamps the <code>Rational</code> <code>x</code> into the inclusive range [<code>lo</code>, <code>hi</code>],
+which assumes <code>lo</code> is not greater than <code>hi</code>.</p>
 
                     </p>
                 </div>
@@ -367,6 +428,46 @@ denominator.</p>
                     </pre>
                     <p class="doc">
                         <p>calculates the hash of the <code>Rational</code> <code>r</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#max">
+                        <h3 id="max">
+                            max
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (max a b)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the larger of the <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#min">
+                        <h3 id="min">
+                            min
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (min a b)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the smaller of the <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
 
                     </p>
                 </div>

@@ -222,6 +222,22 @@ negative power of zero is undefined.")
   (defn > [a b] (< b a))
   (implements > Rational.>)
 
+  (doc <= "checks whether `Rational` `a` is less than or equal to `b`.")
+  (defn <= [a b] (not (< b a)))
+
+  (doc >= "checks whether `Rational` `a` is greater than or equal to `b`.")
+  (defn >= [a b] (not (< a b)))
+
+  (doc min "returns the smaller of the `Rational`s `a` and `b`.")
+  (defn min [a b] (if (< a b) @a @b))
+
+  (doc max "returns the larger of the `Rational`s `a` and `b`.")
+  (defn max [a b] (if (< a b) @b @a))
+
+  (doc clamp "clamps the `Rational` `x` into the inclusive range [`lo`, `hi`],
+which assumes `lo` is not greater than `hi`.")
+  (defn clamp [lo hi x] (cond (< x lo) @lo (< hi x) @hi @x))
+
   (doc neg "negates the `Rational` `r`.")
   (defn neg [r] (init (Int.neg @(numerator &r)) @(denominator &r)))
   (implements neg Rational.neg)

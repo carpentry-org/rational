@@ -280,4 +280,79 @@
       "neg? tracks a computed negative")
     (assert-true test
       (Rational.zero? &(sub &(new 1 2) &(new 1 2)))
-      "zero? tracks a computed zero")))
+      "zero? tracks a computed zero")
+
+    ; comparisons cross-multiply, so equal-valued but differently-written
+    ; fractions compare as equal.
+    (assert-true test
+      (Rational.<= &(new 1 2) &(new 2 3))
+      "<= holds when strictly less")
+    (assert-true test
+      (Rational.<= &(new 2 4) &(new 1 2))
+      "<= holds for equal values written differently")
+    (assert-false test
+      (Rational.<= &(new 2 3) &(new 1 2))
+      "<= rejects a greater value")
+    (assert-true test
+      (Rational.>= &(new 2 3) &(new 1 2))
+      ">= holds when strictly greater")
+    (assert-true test
+      (Rational.>= &(new 1 2) &(new 2 4))
+      ">= holds for equal values written differently")
+    (assert-false test
+      (Rational.>= &(new 1 2) &(new 2 3))
+      ">= rejects a lesser value")
+
+    (assert-equal test
+      &(new 1 2)
+      &(Rational.min &(new 1 2) &(new 2 3))
+      "min returns the smaller argument")
+    (assert-equal test
+      &(new 1 2)
+      &(Rational.min &(new 2 3) &(new 1 2))
+      "min does not depend on argument order")
+    (assert-equal test
+      &(new 1 3)
+      &(Rational.min &(new 2 4) &(new 1 3))
+      "min reduces and compares, picking 1/3 over 1/2")
+    (assert-equal test
+      &(new -3 4)
+      &(Rational.min &(new -3 4) &(new 1 5))
+      "min handles negative values")
+    (assert-equal test
+      &(new 2 3)
+      &(Rational.max &(new 1 2) &(new 2 3))
+      "max returns the larger argument")
+    (assert-equal test
+      &(new 2 3)
+      &(Rational.max &(new 2 3) &(new 1 2))
+      "max does not depend on argument order")
+    (assert-equal test
+      &(new -1 5)
+      &(Rational.max &(new -3 4) &(new -1 5))
+      "max of two negatives picks the one closer to zero")
+    (assert-equal test
+      &(new 1 2)
+      &(Rational.max &(new 1 2) &(new 1 2))
+      "max of equal values is that value")
+
+    (assert-equal test
+      &(new 1 2)
+      &(Rational.clamp &(new 0 1) &(new 1 1) &(new 1 2))
+      "clamp leaves a value already in range untouched")
+    (assert-equal test
+      &(new 0 1)
+      &(Rational.clamp &(new 0 1) &(new 1 1) &(new -3 4))
+      "clamp raises a value below the lower bound")
+    (assert-equal test
+      &(new 1 1)
+      &(Rational.clamp &(new 0 1) &(new 1 1) &(new 3 2))
+      "clamp lowers a value above the upper bound")
+    (assert-equal test
+      &(new 1 4)
+      &(Rational.clamp &(new 1 4) &(new 3 4) &(new 1 4))
+      "clamp keeps a value sitting on the lower bound")
+    (assert-equal test
+      &(new 3 4)
+      &(Rational.clamp &(new 1 4) &(new 3 4) &(new 3 4))
+      "clamp keeps a value sitting on the upper bound")))

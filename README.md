@@ -31,6 +31,10 @@ provided.
 (Rational.pos? (Rational.new -3 4)) ; => false
 (Rational.neg? (Rational.new -3 4)) ; => true
 (Rational.zero? (Rational.new 0 5)) ; => true
+(Rational.<= (Rational.new 1 2) (Rational.new 2 3)) ; => true
+(Rational.min (Rational.new 1 2) (Rational.new 2 3)) ; => (Rational 1/2)
+(Rational.max (Rational.new 1 2) (Rational.new 2 3)) ; => (Rational 2/3)
+(Rational.clamp (Rational.new 0 1) (Rational.new 1 1) (Rational.new 3 2)) ; => (Rational 1/1)
 ```
 
 Please note that conversion can be lossy, because conversion to integer throws
