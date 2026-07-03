@@ -24,6 +24,10 @@ provided.
 (Rational.floor (Rational.new 7 2)) ; => (Rational 3/1)
 (Rational.ceil (Rational.new 7 2)) ; => (Rational 4/1)
 (Rational.round (Rational.new 7 2)) ; => (Rational 4/1)
+(Rational.reciprocal (Rational.new 3 4)) ; => (Rational 4/3)
+(Rational.pow (Rational.new 2 3) 3) ; => (Rational 8/27)
+(Rational.pow (Rational.new 2 3) -2) ; => (Rational 9/4)
+(Rational.sign (Rational.new -3 4)) ; => (Rational -1/1)
 ```
 
 Please note that conversion can be lossy, because conversion to integer throws
