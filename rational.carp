@@ -183,6 +183,21 @@ This function might incur a precision loss.")
           d (* da nb)]
       (new n d)))
 
+  (doc reciprocal "returns the reciprocal (multiplicative inverse) `1/r` of the
+`Rational` `r`. The reciprocal of zero is undefined, mirroring division by
+zero.")
+  (defn reciprocal [r] (new @(denominator r) @(numerator r)))
+
+  (doc pow "raises the `Rational` `r` to the integer power `n`. A negative
+exponent inverts the fraction, so `r^-n` is `(1/r)^n`, and `r^0` is `1`. Like
+the other arithmetic operations the result can overflow for large powers, and a
+negative power of zero is undefined.")
+  (defn pow [r n]
+    (let [e (Int.abs n)
+          pn (Int.pow @(numerator r) e)
+          pd (Int.pow @(denominator r) e)]
+      (if (Int.< n 0) (new pd pn) (new pn pd))))
+
   (doc modulo "calculates the modulo of two `Rational`s `a` and `b`.")
   (defn modulo [a b]
     (let [na @(numerator a)
@@ -207,6 +222,22 @@ This function might incur a precision loss.")
   (defn > [a b] (< b a))
   (implements > Rational.>)
 
+  (doc <= "checks whether `Rational` `a` is less than or equal to `b`.")
+  (defn <= [a b] (not (< b a)))
+
+  (doc >= "checks whether `Rational` `a` is greater than or equal to `b`.")
+  (defn >= [a b] (not (< a b)))
+
+  (doc min "returns the smaller of the `Rational`s `a` and `b`.")
+  (defn min [a b] (if (< a b) @a @b))
+
+  (doc max "returns the larger of the `Rational`s `a` and `b`.")
+  (defn max [a b] (if (< a b) @b @a))
+
+  (doc clamp "clamps the `Rational` `x` into the inclusive range [`lo`, `hi`],
+which assumes `lo` is not greater than `hi`.")
+  (defn clamp [lo hi x] (cond (< x lo) @lo (< hi x) @hi @x))
+
   (doc neg "negates the `Rational` `r`.")
   (defn neg [r] (init (Int.neg @(numerator &r)) @(denominator &r)))
   (implements neg Rational.neg)
@@ -214,6 +245,24 @@ This function might incur a precision loss.")
   (doc abs "returns the absolute value of the `Rational` `r`.")
   (defn abs [r] (init (Int.abs @(numerator &r)) @(denominator &r)))
   (implements abs Rational.abs)
+
+  (doc sign "returns the sign of the `Rational` `r` as a `Rational`: `-1` when
+`r` is negative, `0` when it is zero, and `1` when it is positive. The numerator
+carries the sign, so a positive denominator is guaranteed by `new`.")
+  (defn sign [r] (from-int (Int.sign @(numerator &r))))
+  (implements sign Rational.sign)
+
+  (doc zero? "returns whether the `Rational` `r` is zero, i.e. its numerator is
+zero.")
+  (defn zero? [r] (Int.= @(numerator r) 0))
+
+  (doc pos? "returns whether the `Rational` `r` is strictly positive. Since a
+`Rational` always carries its sign on the numerator, this is the sign of the
+numerator.")
+  (defn pos? [r] (Int.< 0 @(numerator r)))
+
+  (doc neg? "returns whether the `Rational` `r` is strictly negative.")
+  (defn neg? [r] (Int.< @(numerator r) 0))
 
   (doc hash "calculates the hash of the `Rational` `r`.")
   (defn hash [r]
