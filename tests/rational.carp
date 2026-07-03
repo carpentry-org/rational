@@ -262,4 +262,22 @@
 
     (assert-equal test &(new 1 1) &(sign (new 3 4)) "sign of a positive is 1")
     (assert-equal test &(new -1 1) &(sign (new -3 4)) "sign of a negative is -1")
-    (assert-equal test &(new 0 1) &(sign (new 0 5)) "sign of zero is 0")))
+    (assert-equal test &(new 0 1) &(sign (new 0 5)) "sign of zero is 0")
+
+    (assert-true test (Rational.pos? &(new 3 4)) "pos? holds for a positive")
+    (assert-false test (Rational.pos? &(new -3 4)) "pos? rejects a negative")
+    (assert-false test (Rational.pos? &(new 0 5)) "pos? rejects zero")
+    (assert-true test (Rational.neg? &(new -3 4)) "neg? holds for a negative")
+    (assert-false test (Rational.neg? &(new 3 4)) "neg? rejects a positive")
+    (assert-false test (Rational.neg? &(new 0 5)) "neg? rejects zero")
+    (assert-true test (Rational.zero? &(new 0 5)) "zero? holds for zero")
+    (assert-false test (Rational.zero? &(new 3 4)) "zero? rejects a positive")
+    (assert-false test (Rational.zero? &(new -3 4)) "zero? rejects a negative")
+    ; the predicates read the reduced, sign-normalized result of `new`, so they
+    ; track the sign of a computed value, not just a literal.
+    (assert-true test
+      (Rational.neg? &(sub &(new 1 4) &(new 1 2)))
+      "neg? tracks a computed negative")
+    (assert-true test
+      (Rational.zero? &(sub &(new 1 2) &(new 1 2)))
+      "zero? tracks a computed zero")))

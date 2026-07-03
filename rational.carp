@@ -236,6 +236,18 @@ carries the sign, so a positive denominator is guaranteed by `new`.")
   (defn sign [r] (from-int (Int.sign @(numerator &r))))
   (implements sign Rational.sign)
 
+  (doc zero? "returns whether the `Rational` `r` is zero, i.e. its numerator is
+zero.")
+  (defn zero? [r] (Int.= @(numerator r) 0))
+
+  (doc pos? "returns whether the `Rational` `r` is strictly positive. Since a
+`Rational` always carries its sign on the numerator, this is the sign of the
+numerator.")
+  (defn pos? [r] (Int.< 0 @(numerator r)))
+
+  (doc neg? "returns whether the `Rational` `r` is strictly negative.")
+  (defn neg? [r] (Int.< @(numerator r) 0))
+
   (doc hash "calculates the hash of the `Rational` `r`.")
   (defn hash [r]
     (if (= 1 @(denominator r)) (hash (numerator r)) (hash &(to-float r))))

@@ -28,6 +28,9 @@ provided.
 (Rational.pow (Rational.new 2 3) 3) ; => (Rational 8/27)
 (Rational.pow (Rational.new 2 3) -2) ; => (Rational 9/4)
 (Rational.sign (Rational.new -3 4)) ; => (Rational -1/1)
+(Rational.pos? (Rational.new -3 4)) ; => false
+(Rational.neg? (Rational.new -3 4)) ; => true
+(Rational.zero? (Rational.new 0 5)) ; => true
 ```
 
 Please note that conversion can be lossy, because conversion to integer throws
