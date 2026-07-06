@@ -119,6 +119,7 @@ so the result is the simplest such fraction. For example, `3.14159...` bounded b
       (from-int 0)
       (let-do [negative (Double.< x 0.0)
                ax (Double.abs x)
+               int-cap 1073741824
                p0 0
                q0 1
                p1 1
@@ -128,10 +129,13 @@ so the result is the simplest such fraction. For example, `3.14159...` bounded b
                exact false]
         (while-do (not done)
           (let [a (Double.to-int (Double.floor v))
-                over (if (Int.> q1 0)
+                over-den (if (Int.> q1 0)
                   (Int.> a (Int./ (Int.- max-denom q0) q1))
+                  false)
+                over-num (if (and (Int.> q1 0) (Int.> p1 0))
+                  (Int.> a (Int./ (Int.- int-cap p0) p1))
                   false)]
-            (if over
+            (if (or over-den over-num)
               (set! done true)
               (let-do [q2 (Int.+ q0 (Int.* a q1))
                        np1 (Int.+ p0 (Int.* a p1))
@@ -143,9 +147,11 @@ so the result is the simplest such fraction. For example, `3.14159...` bounded b
                 (if (Double.< frac 0.000000001)
                   (do (set! done true) (set! exact true))
                   (set! v (Double./ 1.0 frac)))))))
-        (if exact
+        (if (or exact (Int.= q0 0))
           (new (if negative (Int.neg p1) p1) q1)
-          (let [k (Int./ (Int.- max-denom q0) q1)
+          (let [kd (Int./ (Int.- max-denom q0) q1)
+                kn (if (Int.> p1 0) (Int./ (Int.- int-cap p0) p1) kd)
+                k (if (Int.< kd kn) kd kn)
                 b1n (Int.+ p0 (Int.* k p1))
                 b1d (Int.+ q0 (Int.* k q1))
                 d1 (Double.abs

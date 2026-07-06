@@ -46,6 +46,28 @@
       &(rationalize 0.5 100)
       "rationalize returns the simplest fraction for 0.5")
     (assert-equal test
+      &(new 123456789 10000)
+      &(from-double 12345.678900000001)
+      "from-double keeps a moderate-magnitude decimal exact")
+    (assert-true test
+      (Double.<
+        (Double./
+          (Double.abs
+            (Double.- (to-double &(from-double 100000000.333)) 100000000.333))
+          100000000.333)
+        0.001)
+      "from-double keeps a large-magnitude value close without numerator overflow")
+    (assert-true test
+      (Double.<
+        (Double./
+          (Double.abs
+            (Double.-
+              (to-double &(from-double 987654.32198699994))
+              987654.32198699994))
+          987654.32198699994)
+        0.001)
+      "from-double approximates a large non-terminating value without corruption")
+    (assert-equal test
       &(new 12 1)
       &(from-int 12)
       "can convert correctly from int")
