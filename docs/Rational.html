@@ -659,6 +659,30 @@ negative power of zero is undefined.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#rationalize">
+                        <h3 id="rationalize">
+                            rationalize
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Double, Int] Rational)
+                    </p>
+                    <pre class="args">
+                        (rationalize x max-denom)
+                    </pre>
+                    <p class="doc">
+                        <p>builds the <code>Rational</code> nearest to the <code>Double</code> <code>x</code> whose
+denominator does not exceed <code>max-denom</code>. This is the best rational approximation
+under that bound; it walks the convergents of the continued-fraction expansion,
+so the result is the simplest such fraction. For example, <code>3.14159...</code> bounded by
+<code>300</code> yields <code>355/113</code>. <code>max-denom</code> should be at least <code>1</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#reciprocal">
                         <h3 id="reciprocal">
                             reciprocal
