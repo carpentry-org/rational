@@ -34,7 +34,7 @@
 <p>Fractions are expressed as pairs of integers: a numerator and a denominator.
 Mathematical operations and conversion primitives to and from integers and
 floating point numbers are provided.</p>
-<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.5.0&quot;)
+<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.6.0&quot;)
 
 (Rational.new 22 12) ; =&gt; (Rational 11/6)
 (* (Rational.new 22 12) (Rational.new 1 6)) ; =&gt; (Rational 2/1)
@@ -61,6 +61,26 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>checks whether <code>Rational</code> <code>a</code> is less than <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#&lt;=">
+                        <h3 id="&lt;=">
+                            &lt;=
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [a, a] Bool)
+                    </p>
+                    <pre class="args">
+                        (&lt;= a b)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>Rational</code> <code>a</code> is less than or equal to <code>b</code>.</p>
 
                     </p>
                 </div>
@@ -105,6 +125,26 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#&gt;=">
+                        <h3 id="&gt;=">
+                            &gt;=
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [a, a] Bool)
+                    </p>
+                    <pre class="args">
+                        (&gt;= a b)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>Rational</code> <code>a</code> is greater than or equal to <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#abs">
                         <h3 id="abs">
                             abs
@@ -141,6 +181,48 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>adds two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#ceil">
+                        <h3 id="ceil">
+                            ceil
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (ceil r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the smallest integer not less than the <code>Rational</code> <code>r</code>
+(rounding toward positive infinity) as a whole <code>Rational</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#clamp">
+                        <h3 id="clamp">
+                            clamp
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (clamp lo hi x)
+                    </pre>
+                    <p class="doc">
+                        <p>clamps the <code>Rational</code> <code>x</code> into the inclusive range [<code>lo</code>, <code>hi</code>],
+which assumes <code>lo</code> is not greater than <code>hi</code>.</p>
 
                     </p>
                 </div>
@@ -225,6 +307,27 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#floor">
+                        <h3 id="floor">
+                            floor
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (floor r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the largest integer not greater than the <code>Rational</code> <code>r</code>
+(rounding toward negative infinity) as a whole <code>Rational</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#from-double">
                         <h3 id="from-double">
                             from-double
@@ -285,6 +388,30 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#from-string">
+                        <h3 id="from-string">
+                            from-string
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref String a)] (Maybe Rational))
+                    </p>
+                    <pre class="args">
+                        (from-string s)
+                    </pre>
+                    <p class="doc">
+                        <p>parses a <code>Rational</code> from text: either a fraction like <code>3/4</code>
+or <code>-2/7</code>, or a bare integer like <code>5</code>. The result is reduced to lowest terms and
+its sign normalized onto the numerator, so <code>6/-8</code> yields <code>-3/4</code>. Returns
+<code>Nothing</code> for malformed input, an empty numerator or denominator, or a zero
+denominator.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#hash">
                         <h3 id="hash">
                             hash
@@ -301,6 +428,46 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>calculates the hash of the <code>Rational</code> <code>r</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#max">
+                        <h3 id="max">
+                            max
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (max a b)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the larger of the <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#min">
+                        <h3 id="min">
+                            min
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref a b), (Ref a b)] a)
+                    </p>
+                    <pre class="args">
+                        (min a b)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the smaller of the <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
 
                     </p>
                 </div>
@@ -365,6 +532,26 @@ floating point numbers are provided.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#neg?">
+                        <h3 id="neg?">
+                            neg?
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref Rational a)] Bool)
+                    </p>
+                    <pre class="args">
+                        (neg? r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns whether the <code>Rational</code> <code>r</code> is strictly negative.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#new">
                         <h3 id="new">
                             new
@@ -407,6 +594,51 @@ are normalized so the sign is carried by the numerator.</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#pos?">
+                        <h3 id="pos?">
+                            pos?
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref Rational a)] Bool)
+                    </p>
+                    <pre class="args">
+                        (pos? r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns whether the <code>Rational</code> <code>r</code> is strictly positive. Since a
+<code>Rational</code> always carries its sign on the numerator, this is the sign of the
+numerator.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#pow">
+                        <h3 id="pow">
+                            pow
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref Rational a), Int] Rational)
+                    </p>
+                    <pre class="args">
+                        (pow r n)
+                    </pre>
+                    <p class="doc">
+                        <p>raises the <code>Rational</code> <code>r</code> to the integer power <code>n</code>. A negative
+exponent inverts the fraction, so <code>r^-n</code> is <code>(1/r)^n</code>, and <code>r^0</code> is <code>1</code>. Like
+the other arithmetic operations the result can overflow for large powers, and a
+negative power of zero is undefined.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#prn">
                         <h3 id="prn">
                             prn
@@ -423,6 +655,49 @@ are normalized so the sign is carried by the numerator.</p>
                     </span>
                     <p class="doc">
                         <p>converts a <code>Rational</code> to a string.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#reciprocal">
+                        <h3 id="reciprocal">
+                            reciprocal
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref Rational a)] Rational)
+                    </p>
+                    <pre class="args">
+                        (reciprocal r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the reciprocal (multiplicative inverse) <code>1/r</code> of the
+<code>Rational</code> <code>r</code>. The reciprocal of zero is undefined, mirroring division by
+zero.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#round">
+                        <h3 id="round">
+                            round
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (round r)
+                    </pre>
+                    <p class="doc">
+                        <p>rounds the <code>Rational</code> <code>r</code> to the nearest integer, with halves
+rounded away from zero, as a whole <code>Rational</code>.</p>
 
                     </p>
                 </div>
@@ -503,6 +778,28 @@ are normalized so the sign is carried by the numerator.</p>
                     </span>
                     <p class="doc">
                         <p>sets the <code>numerator</code> property of a <code>Rational</code> in place.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#sign">
+                        <h3 id="sign">
+                            sign
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [Rational] a)
+                    </p>
+                    <pre class="args">
+                        (sign r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns the sign of the <code>Rational</code> <code>r</code> as a <code>Rational</code>: <code>-1</code> when
+<code>r</code> is negative, <code>0</code> when it is zero, and <code>1</code> when it is positive. The numerator
+carries the sign, so a positive denominator is guaranteed by <code>new</code>.</p>
 
                     </p>
                 </div>
@@ -606,7 +903,8 @@ are normalized so the sign is carried by the numerator.</p>
                     </pre>
                     <p class="doc">
                         <p>converts a <code>Rational</code> <code>r</code> to an <code>Integer</code>.</p>
-<p>This function might incur a precision loss.</p>
+<p>This function might incur a precision loss; it truncates toward zero. See
+<a href="#floor">floor</a>, <a href="#ceil">ceil</a>, and <a href="#round">round</a> for other rounding modes.</p>
 
                     </p>
                 </div>
@@ -667,6 +965,27 @@ are normalized so the sign is carried by the numerator.</p>
                     </pre>
                     <p class="doc">
                         
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#zero?">
+                        <h3 id="zero?">
+                            zero?
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref Rational a)] Bool)
+                    </p>
+                    <pre class="args">
+                        (zero? r)
+                    </pre>
+                    <p class="doc">
+                        <p>returns whether the <code>Rational</code> <code>r</code> is zero, i.e. its numerator is
+zero.</p>
+
                     </p>
                 </div>
             </div>
