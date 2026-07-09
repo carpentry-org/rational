@@ -113,59 +113,68 @@ rounded away from zero, as a whole `Rational`.")
 denominator does not exceed `max-denom`. This is the best rational approximation
 under that bound; it walks the convergents of the continued-fraction expansion,
 so the result is the simplest such fraction. For example, `3.14159...` bounded by
-`300` yields `355/113`. `max-denom` should be at least `1`.")
+`300` yields `355/113`. `max-denom` should be at least `1`.
+
+Non-finite and out-of-range inputs saturate to a valid, finite `Rational` with a
+non-zero denominator, so the result is always safe to divide by: `NaN` yields
+`0/1`, and infinities or magnitudes beyond the representable range clamp to
+`±1073741824/1`.")
   (defn rationalize [x max-denom]
-    (if (Double.= x 0.0)
-      (from-int 0)
-      (let-do [negative (Double.< x 0.0)
-               ax (Double.abs x)
-               int-cap 1073741824
-               p0 0
-               q0 1
-               p1 1
-               q1 0
-               v ax
-               done false
-               exact false]
-        (while-do (not done)
-          (let [a (Double.to-int (Double.floor v))
-                over-den (if (Int.> q1 0)
-                  (Int.> a (Int./ (Int.- max-denom q0) q1))
-                  false)
-                over-num (if (and (Int.> q1 0) (Int.> p1 0))
-                  (Int.> a (Int./ (Int.- int-cap p0) p1))
-                  false)]
-            (if (or over-den over-num)
-              (set! done true)
-              (let-do [q2 (Int.+ q0 (Int.* a q1))
-                       np1 (Int.+ p0 (Int.* a p1))
-                       frac (Double.- v (Double.from-int a))]
-                (set! p0 p1)
-                (set! q0 q1)
-                (set! p1 np1)
-                (set! q1 q2)
-                (if (Double.< frac 0.000000001)
-                  (do (set! done true) (set! exact true))
-                  (set! v (Double./ 1.0 frac)))))))
-        (if (or exact (Int.= q0 0))
-          (new (if negative (Int.neg p1) p1) q1)
-          (let [kd (Int./ (Int.- max-denom q0) q1)
-                kn (if (Int.> p1 0) (Int./ (Int.- int-cap p0) p1) kd)
-                k (if (Int.< kd kn) kd kn)
-                b1n (Int.+ p0 (Int.* k p1))
-                b1d (Int.+ q0 (Int.* k q1))
-                d1 (Double.abs
-                  (Double.-
-                    (Double./ (Double.from-int b1n) (Double.from-int b1d))
-                    ax))
-                d2 (Double.abs
-                  (Double.-
-                    (Double./ (Double.from-int p1) (Double.from-int q1))
-                    ax))
-                use-semi (Double.< d1 d2)
-                bn (if use-semi b1n p1)
-                bd (if use-semi b1d q1)]
-            (new (if negative (Int.neg bn) bn) bd))))))
+    (let [int-cap 1073741824]
+      (cond
+        (not (Double.= x x)) (from-int 0)
+        (Double.= x 0.0) (from-int 0)
+        (Double.< (Double.from-int int-cap) x) (new int-cap 1)
+        (Double.< x (Double.from-int (Int.neg int-cap)))
+          (new (Int.neg int-cap) 1)
+        (let-do [negative (Double.< x 0.0)
+                 ax (Double.abs x)
+                 p0 0
+                 q0 1
+                 p1 1
+                 q1 0
+                 v ax
+                 done false
+                 exact false]
+          (while-do (not done)
+            (let [a (Double.to-int (Double.floor v))
+                  over-den (if (Int.> q1 0)
+                    (Int.> a (Int./ (Int.- max-denom q0) q1))
+                    false)
+                  over-num (if (and (Int.> q1 0) (Int.> p1 0))
+                    (Int.> a (Int./ (Int.- int-cap p0) p1))
+                    false)]
+              (if (or over-den over-num)
+                (set! done true)
+                (let-do [q2 (Int.+ q0 (Int.* a q1))
+                         np1 (Int.+ p0 (Int.* a p1))
+                         frac (Double.- v (Double.from-int a))]
+                  (set! p0 p1)
+                  (set! q0 q1)
+                  (set! p1 np1)
+                  (set! q1 q2)
+                  (if (Double.< frac 0.000000001)
+                    (do (set! done true) (set! exact true))
+                    (set! v (Double./ 1.0 frac)))))))
+          (if (or exact (Int.= q0 0))
+            (new (if negative (Int.neg p1) p1) q1)
+            (let [kd (Int./ (Int.- max-denom q0) q1)
+                  kn (if (Int.> p1 0) (Int./ (Int.- int-cap p0) p1) kd)
+                  k (if (Int.< kd kn) kd kn)
+                  b1n (Int.+ p0 (Int.* k p1))
+                  b1d (Int.+ q0 (Int.* k q1))
+                  d1 (Double.abs
+                    (Double.-
+                      (Double./ (Double.from-int b1n) (Double.from-int b1d))
+                      ax))
+                  d2 (Double.abs
+                    (Double.-
+                      (Double./ (Double.from-int p1) (Double.from-int q1))
+                      ax))
+                  use-semi (Double.< d1 d2)
+                  bn (if use-semi b1n p1)
+                  bd (if use-semi b1d q1)]
+              (new (if negative (Int.neg bn) bn) bd)))))))
 
   (doc from-float "builds a `Rational` from a `Float` `f`.")
   (defn from-float [f] (rationalize (Double.from-float f) 1000000))

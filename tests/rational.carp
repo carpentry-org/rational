@@ -68,6 +68,30 @@
         0.001)
       "from-double approximates a large non-terminating value without corruption")
     (assert-equal test
+      &(from-int 0)
+      &(from-double (/ 0.0 0.0))
+      "from-double maps NaN to 0/1 (and terminates instead of hanging)")
+    (assert-equal test
+      &(new 1073741824 1)
+      &(from-double (/ 1.0 0.0))
+      "from-double clamps +Inf to the largest representable rational")
+    (assert-equal test
+      &(new -1073741824 1)
+      &(from-double (/ -1.0 0.0))
+      "from-double clamps -Inf to the smallest representable rational")
+    (assert-equal test
+      1073741824
+      (to-int &(from-double (/ 1.0 0.0)))
+      "to-int of a clamped infinity has a non-zero denominator, so it never SIGFPEs")
+    (assert-equal test
+      &(new 1073741824 1)
+      &(from-double 3000000000.0)
+      "from-double clamps a finite magnitude beyond 2^31 instead of overflowing to garbage")
+    (assert-equal test
+      &(new -1073741824 1)
+      &(from-double -3000000000.0)
+      "from-double clamps a large negative magnitude instead of overflowing")
+    (assert-equal test
       &(new 12 1)
       &(from-int 12)
       "can convert correctly from int")
