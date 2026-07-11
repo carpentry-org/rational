@@ -352,6 +352,25 @@
       (Rational.zero? &(sub &(new 1 2) &(new 1 2)))
       "zero? tracks a computed zero")
 
+    ; `zero` is 0/1, not the 0/0 a naive derive would produce, so arithmetic
+    ; against it is well-defined rather than a division by zero.
+    (assert-equal test &(new 0 1) &(Rational.zero) "zero is 0/1")
+    (assert-true test
+      (Rational.zero? &(Rational.zero))
+      "zero? holds for the zero constructor")
+    (assert-equal test
+      &(new 3 4)
+      &(add &(new 3 4) &(Rational.zero))
+      "adding zero is the identity")
+    (assert-equal test
+      &(new 3 4)
+      &(sub &(new 3 4) &(Rational.zero))
+      "subtracting zero is the identity")
+    (assert-equal test
+      &(Rational.zero)
+      &(mul &(new 3 4) &(Rational.zero))
+      "multiplying by zero is zero")
+
     ; comparisons cross-multiply, so equal-valued but differently-written
     ; fractions compare as equal.
     (assert-true test

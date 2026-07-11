@@ -1,7 +1,6 @@
 (deftype Rational [numerator Int
                    denominator Int])
 (derive Rational =)
-(derive Rational zero)
 
 (doc Rational "A module for rational numbers in Carp.
 
@@ -41,6 +40,11 @@ are normalized so the sign is carried by the numerator.")
   (doc from-int "builds a `Rational` from an `Integer` `i`.")
   (defn from-int [i] (init i 1))
   (implements from-int Rational.from-int)
+
+  (doc zero "returns the additive identity `0/1`. The denominator is `1`, not
+`0`, so the result is safe to use in any arithmetic operation.")
+  (defn zero [] (init 0 1))
+  (implements zero Rational.zero)
 
   (doc from-string "parses a `Rational` from text: either a fraction like `3/4`
 or `-2/7`, or a bare integer like `5`. The result is reduced to lowest terms and
