@@ -133,6 +133,30 @@
       &(modulo &(new 12 5) &(new 3 4))
       "can modulo correctly")
 
+    ; arithmetic cancels common factors before multiplying, so a reduced result
+    ; that is perfectly representable is not corrupted by an intermediate product
+    ; overflowing 32-bit `Int`.
+    (assert-equal test
+      &(new 2 46341)
+      &(add &(new 1 46341) &(new 1 46341))
+      "add does not overflow when the naive common denominator exceeds 2^31")
+    (assert-equal test
+      &(new 1 48000)
+      &(add &(new 1 120000) &(new 1 80000))
+      "add reduces unequal denominators before multiplying to avoid overflow")
+    (assert-equal test
+      &(new -1 240000)
+      &(sub &(new 1 120000) &(new 1 80000))
+      "sub reduces unequal denominators before multiplying to avoid overflow")
+    (assert-equal test
+      &(new 4 9)
+      &(mul &(new 46342 69519) &(new 46346 69513))
+      "mul cross-cancels so both naive products overflowing 2^31 still yields 4/9")
+    (assert-equal test
+      &(new 4 9)
+      &(div &(new 46342 69519) &(new 69513 46346))
+      "div cross-cancels so both naive products overflowing 2^31 still yields 4/9")
+
     (assert-true test (< &(new 1 3) &(new 1 2)) "< with same sign")
     (assert-false test (< &(new 1 2) &(new 1 3)) "not < when greater")
     (assert-false test (< &(new 1 2) &(new 1 2)) "not < when equal")
