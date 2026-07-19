@@ -204,9 +204,10 @@ This function might incur a precision loss.")
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (+ (* na db) (* nb da))
-          d (* da db)]
-      (new n d)))
+          g (gcd da db)
+          qa (/ da g)
+          qb (/ db g)]
+      (new (+ (* na qb) (* nb qa)) (* da qb))))
 
   (doc sub "subtracts two `Rational`s `a` and `b`.")
   (defn sub [a b]
@@ -214,9 +215,10 @@ This function might incur a precision loss.")
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (- (* na db) (* nb da))
-          d (* da db)]
-      (new n d)))
+          g (gcd da db)
+          qa (/ da g)
+          qb (/ db g)]
+      (new (- (* na qb) (* nb qa)) (* da qb))))
 
   (doc mul "multiplies two `Rational`s `a` and `b`.")
   (defn mul [a b]
@@ -224,9 +226,9 @@ This function might incur a precision loss.")
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (* na nb)
-          d (* da db)]
-      (new n d)))
+          g1 (gcd na db)
+          g2 (gcd nb da)]
+      (new (* (/ na g1) (/ nb g2)) (* (/ da g2) (/ db g1)))))
 
   (doc div "divides two `Rational`s `a` and `b`.")
   (defn div [a b]
@@ -234,9 +236,9 @@ This function might incur a precision loss.")
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (* na db)
-          d (* da nb)]
-      (new n d)))
+          g1 (gcd na nb)
+          g2 (gcd da db)]
+      (new (* (/ na g1) (/ db g2)) (* (/ da g2) (/ nb g1)))))
 
   (doc reciprocal "returns the reciprocal (multiplicative inverse) `1/r` of the
 `Rational` `r`. The reciprocal of zero is undefined, mirroring division by
