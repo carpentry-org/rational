@@ -24,6 +24,15 @@ floating point numbers are provided.
   (private gcd)
   (hidden gcd)
 
+  (defn div-floor [n d]
+    (let [q (/ n d)] (if (and (< n 0) (/= 0 (mod n d))) (dec q) q)))
+  (private div-floor)
+  (hidden div-floor)
+
+  (defn mod-floor [n d] (let [r (mod n d)] (if (< r 0) (+ r d) r)))
+  (private mod-floor)
+  (hidden mod-floor)
+
   (private init)
   (hidden init)
 
@@ -86,11 +95,7 @@ This function might incur a precision loss; it truncates toward zero. See
 
   (doc floor "returns the largest integer not greater than the `Rational` `r`
 (rounding toward negative infinity) as a whole `Rational`.")
-  (defn floor [r]
-    (let [n @(numerator &r)
-          d @(denominator &r)
-          q (/ n d)]
-      (from-int (if (and (< n 0) (/= 0 (mod n d))) (dec q) q))))
+  (defn floor [r] (from-int (div-floor @(numerator &r) @(denominator &r))))
   (implements floor Rational.floor)
 
   (doc ceil "returns the smallest integer not less than the `Rational` `r`
@@ -198,7 +203,9 @@ This function might incur a precision loss.")
   (defn to-double [r]
     (/ (Double.from-int @(numerator r)) (Double.from-int @(denominator r))))
 
-  (doc add "adds two `Rational`s `a` and `b`.")
+  (doc add "adds two `Rational`s `a` and `b`. Common factors are cancelled
+first, but the result still overflows when the sum in lowest terms is not
+representable, for example when both denominators are large and coprime.")
   (defn add [a b]
     (let [na @(numerator a)
           nb @(numerator b)
@@ -209,7 +216,8 @@ This function might incur a precision loss.")
           qb (/ db g)]
       (new (+ (* na qb) (* nb qa)) (* da qb))))
 
-  (doc sub "subtracts two `Rational`s `a` and `b`.")
+  (doc sub "subtracts two `Rational`s `a` and `b`. Like [add](#add) it can
+overflow when the difference in lowest terms is not representable.")
   (defn sub [a b]
     (let [na @(numerator a)
           nb @(numerator b)
@@ -220,7 +228,8 @@ This function might incur a precision loss.")
           qb (/ db g)]
       (new (- (* na qb) (* nb qa)) (* da qb))))
 
-  (doc mul "multiplies two `Rational`s `a` and `b`.")
+  (doc mul "multiplies two `Rational`s `a` and `b`. Like [add](#add) it can
+overflow when the product in lowest terms is not representable.")
   (defn mul [a b]
     (let [na @(numerator a)
           nb @(numerator b)
@@ -230,7 +239,8 @@ This function might incur a precision loss.")
           g2 (gcd nb da)]
       (new (* (/ na g1) (/ nb g2)) (* (/ da g2) (/ db g1)))))
 
-  (doc div "divides two `Rational`s `a` and `b`.")
+  (doc div "divides two `Rational`s `a` and `b`. Like [add](#add) it can
+overflow when the quotient in lowest terms is not representable.")
   (defn div [a b]
     (let [na @(numerator a)
           nb @(numerator b)
@@ -255,24 +265,74 @@ negative power of zero is undefined.")
           pd (Int.pow @(denominator r) e)]
       (if (Int.< n 0) (new pd pn) (new pn pd))))
 
-  (doc modulo "calculates the modulo of two `Rational`s `a` and `b`.")
+  (defn add-mod [a b m]
+    (let [c (Int.- m b)] (if (Int.< a c) (Int.+ a b) (Int.- a c))))
+  (private add-mod)
+  (hidden add-mod)
+
+  (defn mul-mod [a b m]
+    (let-do [x (Int.mod a m)
+             y b
+             r 0]
+      (while-do (Int.< 0 y)
+        (when (Int.= 1 (Int.mod y 2)) (set! r (add-mod r x m)))
+        (set! x (add-mod x x m))
+        (set! y (Int./ y 2)))
+      r))
+  (private mul-mod)
+  (hidden mul-mod)
+
+  (doc modulo "calculates the modulo of two `Rational`s `a` and `b`, i.e. the
+remainder `a - trunc(a/b)*b`, which carries the sign of `a`.
+
+The quotient `a/b` is never materialized, so a remainder that is representable
+is returned exactly even when the quotient itself would overflow.")
   (defn modulo [a b]
     (let [na @(numerator a)
           nb @(numerator b)
           da @(denominator a)
           db @(denominator b)
-          n (from-int (/ (* na db) (* nb da)))]
-      (sub a &(mul &n b))))
+          g1 (gcd na nb)
+          g2 (gcd da db)
+          pn (/ na g1)
+          q (* (/ nb g1) (/ da g2))
+          r (mul-mod (Int.abs pn) (/ db g2) (Int.abs q))]
+      (mul b &(new (if (Int.< pn 0) (Int.neg r) r) q))))
 
   (doc = "compares two `Rational`s `a` and `b`.")
   (defn = [a b]
     (and (= (numerator a) (numerator b)) (= (denominator a) (denominator b))))
   (implements = Rational.=)
 
-  (doc < "checks whether `Rational` `a` is less than `b`.")
+  (defn cmp [na da nb db]
+    (cond
+      (and (Int.= da 0) (Int.= db 0))
+        (Int.sign (Int.- (Int.sign na) (Int.sign nb)))
+      (Int.= da 0) (Int.sign na)
+      (Int.= db 0) (Int.neg (Int.sign nb))
+      (let [qa (div-floor na da)
+            qb (div-floor nb db)]
+        (if (Int./= qa qb)
+          (if (Int.< qa qb) -1 1)
+          (let [ra (mod-floor na da)
+                rb (mod-floor nb db)]
+            (cond
+              (and (Int.= ra 0) (Int.= rb 0)) 0
+              (Int.= ra 0) -1
+              (Int.= rb 0) 1
+              (Int.neg (cmp da ra db rb))))))))
+  (private cmp)
+  (hidden cmp)
+
+  (doc < "checks whether `Rational` `a` is less than `b`.
+
+The comparison is exact for every representable pair: it walks the two
+continued-fraction expansions instead of cross-multiplying, so no intermediate
+product can overflow.")
   (defn < [a b]
-    (Int.< (* @(numerator a) @(denominator b))
-           (* @(numerator b) @(denominator a))))
+    (Int.<
+      (cmp @(numerator a) @(denominator a) @(numerator b) @(denominator b))
+      0))
   (implements < Rational.<)
 
   (doc > "checks whether `Rational` `a` is greater than `b`.")

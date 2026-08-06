@@ -3,6 +3,40 @@
 
 (use-all Rational Test)
 
+(defn cross-lt [a b]
+  (Int.< (* @(numerator a) @(denominator b)) (* @(numerator b) @(denominator a))))
+
+(defn lt-mismatches []
+  (let-do [bad 0]
+    (for [na -12 13]
+      (for [da 1 13]
+        (for [nb -12 13]
+          (for [db 1 13]
+            (let [x (new na da)
+                  y (new nb db)]
+              (when (/= (< &x &y) (cross-lt &x &y)) (set! bad (Int.inc bad))))))))
+    bad))
+
+(defn modulo-mismatches []
+  (let-do [bad 0]
+    (for [na -8 9]
+      (for [da 1 9]
+        (for [nb -8 9]
+          (for [db 1 9]
+            (when (/= nb 0)
+              (let [x (new na da)
+                    y (new nb db)
+                    want (sub &x &(mul &(from-int (to-int &(div &x &y))) &y))]
+                (when (/= &(modulo &x &y) &want) (set! bad (Int.inc bad)))))))))
+    bad))
+
+(defn ascending? [a]
+  (let-do [ok true]
+    (for [i 1 (Array.length a)]
+      (unless (< (Array.unsafe-nth a (Int.dec i)) (Array.unsafe-nth a i))
+        (set! ok false)))
+    ok))
+
 (defn main []
   (with-test test
     (assert-equal test
@@ -132,6 +166,34 @@
       &(new 3 20)
       &(modulo &(new 12 5) &(new 3 4))
       "can modulo correctly")
+    (assert-equal test
+      &(new -3 20)
+      &(modulo &(new -12 5) &(new 3 4))
+      "modulo carries the sign of the dividend")
+    (assert-equal test
+      &(new 3 20)
+      &(modulo &(new 12 5) &(new -3 4))
+      "modulo ignores the sign of the divisor")
+    (assert-equal test
+      &(new -3 20)
+      &(modulo &(new -12 5) &(new -3 4))
+      "modulo of two negatives is negative")
+    (assert-equal test
+      &(new 1 3)
+      &(modulo &(new 1 3) &(new 1 2))
+      "modulo returns the dividend when it is smaller than the divisor")
+    (assert-equal test
+      &(new 0 1)
+      &(modulo &(new 100000 1) &(new 1 100000))
+      "modulo of an exact multiple is zero even when the quotient overflows")
+    (assert-equal test
+      &(new 1 50000)
+      &(modulo &(new 50000 1) &(new 3 50000))
+      "modulo is exact when the quotient exceeds 2^31")
+    (assert-equal test
+      0
+      (modulo-mismatches)
+      "modulo agrees with a - trunc(a/b)*b on every small fraction pair")
 
     ; arithmetic cancels common factors before multiplying, so a reduced result
     ; that is perfectly representable is not corrupted by an intermediate product
@@ -468,4 +530,95 @@
     (assert-equal test
       &(new 3 4)
       &(Rational.clamp &(new 1 4) &(new 3 4) &(new 3 4))
-      "clamp keeps a value sitting on the upper bound")))
+      "clamp keeps a value sitting on the upper bound")
+
+    (assert-false test
+      (< &(new 46339 1) &(new 1 46339))
+      "46339/1 is not below 1/46339")
+    (assert-false test
+      (< &(new 46340 1) &(new 1 46340))
+      "46340/1 is not below 1/46340")
+    (assert-false test
+      (< &(new 46341 1) &(new 1 46341))
+      "46341/1 is not below 1/46341, where the cross product first overflows")
+    (assert-false test
+      (< &(new 46342 1) &(new 1 46342))
+      "46342/1 is not below 1/46342")
+    (assert-true test
+      (< &(new 1 46341) &(new 46341 1))
+      "1/46341 is below 46341/1")
+    (assert-true test
+      (< &(new -46341 1) &(new 1 46341))
+      "a large negative is below a tiny positive")
+    (assert-false test
+      (< &(new 46341 1) &(new -1 46341))
+      "a large positive is not below a tiny negative")
+    (assert-true test
+      (< &(new -46341 1) &(new -1 46341))
+      "a large negative is below a tiny negative")
+    (assert-false test
+      (< &(new -1 46341) &(new -46341 1))
+      "a tiny negative is not below a large negative")
+    (assert-false test
+      (< &(new 46341 46342) &(new 46341 46342))
+      "a large fraction is not below itself")
+    (assert-true test
+      (<= &(new 46341 46342) &(new 46341 46342))
+      "<= holds for a large fraction and itself")
+    (assert-true test
+      (< &(new 46341 46342) &(new 46342 46343))
+      "neighbouring large fractions are ordered by their distance to one")
+    (assert-true test
+      (< &(new 46330 46333) &(new 46349 46350))
+      "two fractions just below one are ordered by their distance to it")
+    (assert-true test
+      (< &(new 1234567890 1234567891) &(new 1234567891 1234567892))
+      "two fractions differing beyond the ninth digit are still ordered exactly")
+    (assert-true test
+      (< &(new 0 1) &(new 1 2147483647))
+      "zero is below the smallest positive fraction")
+    (assert-true test
+      (< &(new -1 2147483647) &(new 0 1))
+      "the largest negative fraction is below zero")
+    (assert-true test
+      (< &(new 2147483646 2147483647) &(new 1 1))
+      "a fraction just under one is below one")
+    (assert-false test
+      (< &(new 1 1) &(new 2147483646 2147483647))
+      "one is not below a fraction just under one")
+    (assert-true test
+      (< &(new 1 2) &(new 1 0))
+      "a zero denominator compares as an infinite magnitude instead of dividing")
+    (assert-true test
+      (< &(new -1 0) &(new 1 2))
+      "a negative zero denominator compares below every finite fraction")
+    (assert-equal test
+      &(new 1 46341)
+      &(Rational.min &(new 46341 1) &(new 1 46341))
+      "min picks the tiny fraction over the huge one")
+    (assert-equal test
+      &(new 46341 1)
+      &(Rational.max &(new 46341 1) &(new 1 46341))
+      "max picks the huge fraction over the tiny one")
+    (assert-equal test
+      &(new 1 46341)
+      &(Rational.clamp &(new -46341 1) &(new 1 46341) &(new 46341 1))
+      "clamp lowers a huge value onto a tiny upper bound")
+    (assert-equal test
+      &[(new 1 100000) (new 1 46341) (new 1 2) (new 3 1) (new 46341 1)]
+      &(Array.sorted
+        &[(new 1 46341) (new 46341 1) (new 1 2) (new 3 1) (new 1 100000)])
+      "sorted orders a mix of tiny and huge fractions ascending")
+    (assert-true test
+      (ascending?
+        &(Array.sorted
+          &[(new 46330 46331)
+            (new 46349 46350)
+            (new 46330 46333)
+            (new 46350 46351)
+            (new 46349 46352)]))
+      "sorted orders fractions that differ only just below one")
+    (assert-equal test
+      0
+      (lt-mismatches)
+      "the exact comparison agrees with cross-multiplication on every small fraction pair")))
