@@ -194,6 +194,38 @@
       0
       (modulo-mismatches)
       "modulo agrees with a - trunc(a/b)*b on every small fraction pair")
+    (assert-equal test
+      &(new -2 1)
+      &(modulo &(new Int.MIN 1) &(new 3 1))
+      "modulo keeps the sign of an Int.MIN numerator")
+    (assert-equal test
+      &(new -2 1)
+      &(modulo &(new Int.MIN 1) &(new -3 1))
+      "modulo of an Int.MIN numerator ignores the sign of the divisor")
+    (assert-equal test
+      &(new -8 3)
+      &(modulo &(new Int.MIN 3) &(new 5 1))
+      "modulo of an Int.MIN numerator over a fraction")
+    (assert-equal test
+      &(new -8 3)
+      &(modulo &(new Int.MIN 3) &(new -5 1))
+      "modulo of an Int.MIN numerator over a fraction by a negative divisor")
+    (assert-equal test
+      &(new -2 1)
+      &(modulo &(new Int.MIN 1) &(new 7 2))
+      "modulo of an Int.MIN numerator by a fractional divisor")
+    (assert-equal test
+      &(new -2 7)
+      &(modulo &(new Int.MIN 7) &(new 3 7))
+      "modulo of two fractions with an Int.MIN numerator")
+    (assert-equal test
+      &(new -1 1)
+      &(modulo &(new Int.MIN 1) &(new Int.MAX 1))
+      "modulo is exact for the widest representable pair")
+    (assert-equal test
+      &(new 0 1)
+      &(modulo &(new Int.MIN 1) &(new 1 1))
+      "modulo of an Int.MIN numerator by an exact divisor is zero, not -1")
 
     ; arithmetic cancels common factors before multiplying, so a reduced result
     ; that is perfectly representable is not corrupted by an intermediate product

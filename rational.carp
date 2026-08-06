@@ -296,8 +296,9 @@ is returned exactly even when the quotient itself would overflow.")
           g2 (gcd da db)
           pn (/ na g1)
           q (* (/ nb g1) (/ da g2))
-          r (mul-mod (Int.abs pn) (/ db g2) (Int.abs q))]
-      (mul b &(new (if (Int.< pn 0) (Int.neg r) r) q))))
+          m (Int.abs q)
+          r (mul-mod (mod-floor pn m) (/ db g2) m)]
+      (mul b &(new (if (and (Int.< pn 0) (Int./= r 0)) (Int.- r m) r) q))))
 
   (doc = "compares two `Rational`s `a` and `b`.")
   (defn = [a b]
