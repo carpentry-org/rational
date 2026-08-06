@@ -285,17 +285,18 @@ negative power of zero is undefined.")
   (private cmp)
   (hidden cmp)
 
+  (defn neg-abs [n] (if (Int.< 0 n) (Int.neg n) n))
+  (private neg-abs)
+  (hidden neg-abs)
+
   (defn abs-below? [a b]
-    (let [na @(numerator a)
-          da @(denominator a)
-          nb @(numerator b)
+    (let [da @(denominator a)
           db @(denominator b)]
-      (and (Int./= nb Int.MIN)
-           (Int.< 0 da)
+      (and (Int.< 0 da)
            (Int.< 0 db)
-           (let [mag (Int.abs nb)]
-             (and (Int.< (cmp na da mag db) 0)
-                  (Int.< (cmp (Int.neg mag) db na da) 0))))))
+           (Int.<
+             (cmp (neg-abs @(numerator b)) db (neg-abs @(numerator a)) da)
+             0))))
   (private abs-below?)
   (hidden abs-below?)
 
@@ -324,9 +325,10 @@ exactly even when the quotient itself would overflow: `100000/1 mod 1/100000`
 has quotient `10^10` and remainder `0/1`. When `a` is smaller than `b` in
 magnitude the quotient is zero and `a` is returned unchanged.
 
-The one inexact case is `a` at least as large as `b` in magnitude while
-`numerator(b) * denominator(a)`, with common factors cancelled, leaves `Int`
-range. `2059044299/195 mod 1285988199/265` is wrong for that reason.")
+The one inexact case is `a` at least as large as `b` in magnitude while the
+magnitude of `numerator(b) * denominator(a)`, with common factors cancelled,
+leaves `Int` range. `2059044299/195 mod 1285988199/265` is wrong for that
+reason.")
   (defn modulo [a b]
     (if (abs-below? a b)
       @a
