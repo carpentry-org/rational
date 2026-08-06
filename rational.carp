@@ -265,6 +265,40 @@ negative power of zero is undefined.")
           pd (Int.pow @(denominator r) e)]
       (if (Int.< n 0) (new pd pn) (new pn pd))))
 
+  (defn cmp [na da nb db]
+    (cond
+      (and (Int.= da 0) (Int.= db 0))
+        (Int.sign (Int.- (Int.sign na) (Int.sign nb)))
+      (Int.= da 0) (Int.sign na)
+      (Int.= db 0) (Int.neg (Int.sign nb))
+      (let [qa (div-floor na da)
+            qb (div-floor nb db)]
+        (if (Int./= qa qb)
+          (if (Int.< qa qb) -1 1)
+          (let [ra (mod-floor na da)
+                rb (mod-floor nb db)]
+            (cond
+              (and (Int.= ra 0) (Int.= rb 0)) 0
+              (Int.= ra 0) -1
+              (Int.= rb 0) 1
+              (Int.neg (cmp da ra db rb))))))))
+  (private cmp)
+  (hidden cmp)
+
+  (defn abs-below? [a b]
+    (let [na @(numerator a)
+          da @(denominator a)
+          nb @(numerator b)
+          db @(denominator b)]
+      (and (Int./= nb Int.MIN)
+           (Int.< 0 da)
+           (Int.< 0 db)
+           (let [mag (Int.abs nb)]
+             (and (Int.< (cmp na da mag db) 0)
+                  (Int.< (cmp (Int.neg mag) db na da) 0))))))
+  (private abs-below?)
+  (hidden abs-below?)
+
   (defn add-mod [a b m]
     (let [c (Int.- m b)] (if (Int.< a c) (Int.+ a b) (Int.- a c))))
   (private add-mod)
@@ -285,45 +319,33 @@ negative power of zero is undefined.")
   (doc modulo "calculates the modulo of two `Rational`s `a` and `b`, i.e. the
 remainder `a - trunc(a/b)*b`, which carries the sign of `a`.
 
-The quotient `a/b` is never materialized, so a remainder that is representable
-is returned exactly even when the quotient itself would overflow.")
+The quotient is never materialized, so a representable remainder is returned
+exactly even when the quotient itself would overflow: `100000/1 mod 1/100000`
+has quotient `10^10` and remainder `0/1`. When `a` is smaller than `b` in
+magnitude the quotient is zero and `a` is returned unchanged.
+
+The one inexact case is `a` at least as large as `b` in magnitude while
+`numerator(b) * denominator(a)`, with common factors cancelled, leaves `Int`
+range. `2059044299/195 mod 1285988199/265` is wrong for that reason.")
   (defn modulo [a b]
-    (let [na @(numerator a)
-          nb @(numerator b)
-          da @(denominator a)
-          db @(denominator b)
-          g1 (gcd na nb)
-          g2 (gcd da db)
-          pn (/ na g1)
-          q (* (/ nb g1) (/ da g2))
-          m (Int.abs q)
-          r (mul-mod (mod-floor pn m) (/ db g2) m)]
-      (mul b &(new (if (and (Int.< pn 0) (Int./= r 0)) (Int.- r m) r) q))))
+    (if (abs-below? a b)
+      @a
+      (let [na @(numerator a)
+            nb @(numerator b)
+            da @(denominator a)
+            db @(denominator b)
+            g1 (gcd na nb)
+            g2 (gcd da db)
+            pn (/ na g1)
+            q (* (/ nb g1) (/ da g2))
+            m (Int.abs q)
+            r (mul-mod (mod-floor pn m) (/ db g2) m)]
+        (mul b &(new (if (and (Int.< pn 0) (Int./= r 0)) (Int.- r m) r) q)))))
 
   (doc = "compares two `Rational`s `a` and `b`.")
   (defn = [a b]
     (and (= (numerator a) (numerator b)) (= (denominator a) (denominator b))))
   (implements = Rational.=)
-
-  (defn cmp [na da nb db]
-    (cond
-      (and (Int.= da 0) (Int.= db 0))
-        (Int.sign (Int.- (Int.sign na) (Int.sign nb)))
-      (Int.= da 0) (Int.sign na)
-      (Int.= db 0) (Int.neg (Int.sign nb))
-      (let [qa (div-floor na da)
-            qb (div-floor nb db)]
-        (if (Int./= qa qb)
-          (if (Int.< qa qb) -1 1)
-          (let [ra (mod-floor na da)
-                rb (mod-floor nb db)]
-            (cond
-              (and (Int.= ra 0) (Int.= rb 0)) 0
-              (Int.= ra 0) -1
-              (Int.= rb 0) 1
-              (Int.neg (cmp da ra db rb))))))))
-  (private cmp)
-  (hidden cmp)
 
   (doc < "checks whether `Rational` `a` is less than `b`.
 

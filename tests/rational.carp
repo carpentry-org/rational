@@ -226,6 +226,38 @@
       &(new 0 1)
       &(modulo &(new Int.MIN 1) &(new 1 1))
       "modulo of an Int.MIN numerator by an exact divisor is zero, not -1")
+    (assert-equal test
+      &(new 1 2)
+      &(modulo &(new 1 2) &(new Int.MAX 1))
+      "modulo returns the dividend when the divisor product overflows")
+    (assert-equal test
+      &(new -1 2)
+      &(modulo &(new -1 2) &(new Int.MAX 1))
+      "modulo of a negative dividend smaller than the divisor keeps its sign")
+    (assert-equal test
+      &(new 1 46341)
+      &(modulo &(new 1 46341) &(new 46341 1))
+      "modulo is exact just past the 46341 overflow boundary")
+    (assert-equal test
+      &(new 1 46340)
+      &(modulo &(new 1 46340) &(new 46340 1))
+      "modulo is exact just below the 46341 overflow boundary")
+    (assert-equal test
+      &(new -1 46341)
+      &(modulo &(new -1 46341) &(new -46341 1))
+      "modulo ignores the divisor sign when the divisor product overflows")
+    (assert-equal test
+      &(new 3 70000)
+      &(modulo &(new 3 70000) &(new 70001 1))
+      "modulo is exact when both operands push the divisor product over 2^31")
+    (assert-equal test
+      &(new Int.MIN 3)
+      &(modulo &(new Int.MIN 3) &(new Int.MAX 1))
+      "modulo returns an Int.MIN-numerator dividend smaller than the divisor")
+    (assert-equal test
+      &(new Int.MIN 46341)
+      &(modulo &(new Int.MIN 46341) &(new 46341 1))
+      "modulo is exact at an Int.MIN numerator over the overflow boundary")
 
     ; arithmetic cancels common factors before multiplying, so a reduced result
     ; that is perfectly representable is not corrupted by an intermediate product
