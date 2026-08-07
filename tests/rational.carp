@@ -30,6 +30,23 @@
                 (when (/= &(modulo &x &y) &want) (set! bad (Int.inc bad)))))))))
     bad))
 
+(defn lattice-violations []
+  (let-do [bad 0
+           rows [[-2093796559 13 -805306368 5]
+                 [-1994091961 13 -1073741824 7]
+                 [2147483647 3 1073741824 5]
+                 [-2147483647 3 -1073741824 5]
+                 [1288490189 3 2147483647 5]
+                 [920350135 3 2147483647 7]]]
+    (for [i 0 (Array.length &rows)]
+      (let [row (Array.unsafe-nth &rows i)
+            x (new @(Array.unsafe-nth row 0) @(Array.unsafe-nth row 1))
+            y (new @(Array.unsafe-nth row 2) @(Array.unsafe-nth row 3))
+            m (modulo &x &y)
+            d (* @(denominator &x) @(denominator &y))]
+        (when (/= 0 (Int.mod d @(denominator &m))) (set! bad (Int.inc bad)))))
+    bad))
+
 (defn ascending? [a]
   (let-do [ok true]
     (for [i 1 (Array.length a)]
@@ -194,6 +211,14 @@
       0
       (modulo-mismatches)
       "modulo agrees with a - trunc(a/b)*b on every small fraction pair")
+    (assert-equal test
+      0
+      (lattice-violations)
+      "the denominator of a modulo divides the product of the two denominators")
+    (assert-equal test
+      &(new 2 3)
+      &(modulo &(new 715827883 1) &(new 2147483647 3))
+      "modulo is exact when the cancelled divisor product just fits")
     (assert-equal test
       &(new -2 1)
       &(modulo &(new Int.MIN 1) &(new 3 1))

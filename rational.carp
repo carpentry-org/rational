@@ -327,8 +327,10 @@ magnitude the quotient is zero and `a` is returned unchanged.
 
 The one inexact case is `a` at least as large as `b` in magnitude while the
 magnitude of `numerator(b) * denominator(a)`, with common factors cancelled,
-leaves `Int` range. `2059044299/195 mod 1285988199/265` is wrong for that
-reason.")
+leaves `Int` range. There the quotient is estimated by cross-multiplication,
+which overflows in turn: `2059044299/195 mod 1285988199/265` is wrong for that
+reason. The denominator of the result always divides the product of the two
+denominators.")
   (defn modulo [a b]
     (if (abs-below? a b)
       @a
@@ -338,11 +340,15 @@ reason.")
             db @(denominator b)
             g1 (gcd na nb)
             g2 (gcd da db)
-            pn (/ na g1)
-            q (* (/ nb g1) (/ da g2))
-            m (Int.abs q)
-            r (mul-mod (mod-floor pn m) (/ db g2) m)]
-        (mul b &(new (if (and (Int.< pn 0) (Int./= r 0)) (Int.- r m) r) q)))))
+            qa (/ nb g1)
+            qb (/ da g2)]
+        (if (Int.< (neg-abs qa) (Int.neg (Int./ Int.MAX qb)))
+          (sub a &(mul &(from-int (/ (* na db) (* nb da))) b))
+          (let [pn (/ na g1)
+                q (* qa qb)
+                m (Int.abs q)
+                r (mul-mod (mod-floor pn m) (/ db g2) m)]
+            (mul b &(new (if (and (Int.< pn 0) (Int./= r 0)) (Int.- r m) r) q)))))))
 
   (doc = "compares two `Rational`s `a` and `b`.")
   (defn = [a b]
