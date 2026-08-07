@@ -42,6 +42,11 @@ Please note that conversion can be lossy, because conversion to integer throws
 away any non-real value and conversion to floating point values is only as
 accurate as floating point numbers are.
 
+Comparisons — and everything built on them, such as `min`, `max`, `clamp` and
+`Array.sorted` — are exact for every representable fraction. Arithmetic is not:
+`add`, `sub`, `mul`, `div` and `pow` cancel common factors first, but they still
+overflow when the result in lowest terms does not fit into an `Int`.
+
 <hr/>
 
 Have fun!
