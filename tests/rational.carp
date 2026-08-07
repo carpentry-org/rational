@@ -307,6 +307,14 @@
       &(new 0 1)
       &(modulo &(new Int.MIN 1) &(new Int.MIN 1))
       "modulo of Int.MIN by itself is zero")
+    (assert-equal test
+      &(new 0 1)
+      &(modulo &(new Int.MIN 3) &(new 1431655765 7))
+      "modulo does not divide Int.MIN by -1 when the fallback products wrap")
+    (assert-equal test
+      &(new 0 1)
+      &(modulo &(new Int.MIN 9) &(new -954437177 15))
+      "modulo survives a wrapped Int.MIN over -1 with a negative divisor")
 
     ; arithmetic cancels common factors before multiplying, so a reduced result
     ; that is perfectly representable is not corrupted by an intermediate product

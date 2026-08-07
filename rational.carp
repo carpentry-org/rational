@@ -343,7 +343,16 @@ denominators.")
             qa (/ nb g1)
             qb (/ da g2)]
         (if (Int.< (neg-abs qa) (Int.neg (Int./ Int.MAX qb)))
-          (sub a &(mul &(from-int (/ (* na db) (* nb da))) b))
+          (let [num (* na db)
+                den (* nb da)]
+            ; Int.MIN / -1 traps on x86, and Int.MIN is its wrapped quotient
+            (sub a
+                 &(mul
+                   &(from-int
+                     (if (and (Int.= den -1) (Int.= num Int.MIN))
+                       Int.MIN
+                       (/ num den)))
+                   b)))
           (let [pn (/ na g1)
                 q (* qa qb)
                 m (Int.abs q)
