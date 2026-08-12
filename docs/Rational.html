@@ -34,7 +34,7 @@
 <p>Fractions are expressed as pairs of integers: a numerator and a denominator.
 Mathematical operations and conversion primitives to and from integers and
 floating point numbers are provided.</p>
-<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.7.0&quot;)
+<pre><code>(load &quot;git@github.com:carpentry-org/rational@0.7.1&quot;)
 
 (Rational.new 22 12) ; =&gt; (Rational 11/6)
 (* (Rational.new 22 12) (Rational.new 1 6)) ; =&gt; (Rational 2/1)
@@ -61,6 +61,9 @@ floating point numbers are provided.</p>
                     </pre>
                     <p class="doc">
                         <p>checks whether <code>Rational</code> <code>a</code> is less than <code>b</code>.</p>
+<p>The comparison is exact for every representable pair: it walks the two
+continued-fraction expansions instead of cross-multiplying, so no intermediate
+product can overflow.</p>
 
                     </p>
                 </div>
@@ -180,7 +183,9 @@ floating point numbers are provided.</p>
                         (add a b)
                     </pre>
                     <p class="doc">
-                        <p>adds two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+                        <p>adds two <code>Rational</code>s <code>a</code> and <code>b</code>. Common factors are cancelled
+first, but the result still overflows when the sum in lowest terms is not
+representable, for example when both denominators are large and coprime.</p>
 
                     </p>
                 </div>
@@ -302,7 +307,8 @@ which assumes <code>lo</code> is not greater than <code>hi</code>.</p>
                         (div a b)
                     </pre>
                     <p class="doc">
-                        <p>divides two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+                        <p>divides two <code>Rational</code>s <code>a</code> and <code>b</code>. Like <a href="#add">add</a> it can
+overflow when the quotient in lowest terms is not representable.</p>
 
                     </p>
                 </div>
@@ -487,7 +493,18 @@ denominator.</p>
                         (modulo a b)
                     </pre>
                     <p class="doc">
-                        <p>calculates the modulo of two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+                        <p>calculates the modulo of two <code>Rational</code>s <code>a</code> and <code>b</code>, i.e. the
+remainder <code>a - trunc(a/b)*b</code>, which carries the sign of <code>a</code>.</p>
+<p>The quotient is never materialized, so a representable remainder is returned
+exactly even when the quotient itself would overflow: <code>100000/1 mod 1/100000</code>
+has quotient <code>10^10</code> and remainder <code>0/1</code>. When <code>a</code> is smaller than <code>b</code> in
+magnitude the quotient is zero and <code>a</code> is returned unchanged.</p>
+<p>The one inexact case is <code>a</code> at least as large as <code>b</code> in magnitude while the
+magnitude of <code>numerator(b) * denominator(a)</code>, with common factors cancelled,
+leaves <code>Int</code> range. There the quotient is estimated by cross-multiplication,
+which overflows in turn: <code>2059044299/195 mod 1285988199/265</code> is wrong for that
+reason. The denominator of the result always divides the product of the two
+denominators.</p>
 
                     </p>
                 </div>
@@ -507,7 +524,8 @@ denominator.</p>
                         (mul a b)
                     </pre>
                     <p class="doc">
-                        <p>multiplies two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+                        <p>multiplies two <code>Rational</code>s <code>a</code> and <code>b</code>. Like <a href="#add">add</a> it can
+overflow when the product in lowest terms is not representable.</p>
 
                     </p>
                 </div>
@@ -868,7 +886,8 @@ carries the sign, so a positive denominator is guaranteed by <code>new</code>.</
                         (sub a b)
                     </pre>
                     <p class="doc">
-                        <p>subtracts two <code>Rational</code>s <code>a</code> and <code>b</code>.</p>
+                        <p>subtracts two <code>Rational</code>s <code>a</code> and <code>b</code>. Like <a href="#add">add</a> it can
+overflow when the difference in lowest terms is not representable.</p>
 
                     </p>
                 </div>
