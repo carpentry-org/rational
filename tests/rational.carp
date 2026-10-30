@@ -97,6 +97,14 @@
       &(rationalize 0.5 100)
       "rationalize returns the simplest fraction for 0.5")
     (assert-equal test
+      &(new 51 10)
+      &(rationalize 5.0625 10)
+      "rationalize finds 51/10 for 5.0625 under a denominator bound of 10")
+    (assert-equal test
+      &(new 1 1000000)
+      &(from-double 0.000000948)
+      "from-double rounds 0.000000948 to 1/1000000 rather than 0")
+    (assert-equal test
       &(new 123456789 10000)
       &(from-double 12345.678900000001)
       "from-double keeps a moderate-magnitude decimal exact")
