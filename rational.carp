@@ -165,7 +165,7 @@ non-zero denominator, so the result is always safe to divide by: `NaN` yields
                   (if (Double.< frac 0.000000001)
                     (do (set! done true) (set! exact true))
                     (set! v (Double./ 1.0 frac)))))))
-          (if (or exact (Int.= q0 0))
+          (if exact
             (new (if negative (Int.neg p1) p1) q1)
             (let [kd (Int./ (Int.- max-denom q0) q1)
                   kn (if (Int.> p1 0) (Int./ (Int.- int-cap p0) p1) kd)
