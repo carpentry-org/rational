@@ -340,6 +340,22 @@
       &(sub &(new 1 120000) &(new 1 80000))
       "sub reduces unequal denominators before multiplying to avoid overflow")
     (assert-equal test
+      &(new 1 503316480)
+      &(add &(new 1 805306368) &(new 1 1342177280))
+      "add is exact when the cancelled common denominator still exceeds 2^31")
+    (assert-equal test
+      &(new 1 2013265920)
+      &(sub &(new 1 805306368) &(new 1 1342177280))
+      "sub is exact when the cancelled common denominator still exceeds 2^31")
+    (assert-equal test
+      &(new 1431655764 1)
+      &(add &(new Int.MAX 3) &(new 2147483645 3))
+      "add is exact when only the unreduced numerator exceeds 2^31")
+    (assert-equal test
+      &(new -1431655765 1)
+      &(sub &(new Int.MIN 3) &(new Int.MAX 3))
+      "sub is exact when only the unreduced numerator falls below Int.MIN")
+    (assert-equal test
       &(new 4 9)
       &(mul &(new 46342 69519) &(new 46346 69513))
       "mul cross-cancels so both naive products overflowing 2^31 still yields 4/9")
