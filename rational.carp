@@ -213,8 +213,14 @@ representable, for example when both denominators are large and coprime.")
           db @(denominator b)
           g (gcd da db)
           qa (/ da g)
-          qb (/ db g)]
-      (new (+ (* na qb) (* nb qa)) (* da qb))))
+          qb (/ db g)
+          t (Long.+
+            (Long.* (Long.from-int na) (Long.from-int qb))
+            (Long.* (Long.from-int nb) (Long.from-int qa)))
+          g2 (gcd g (Long.to-int (Long.mod t (Long.from-int g))))]
+      (new
+        (Long.to-int (Long./ t (Long.from-int g2)))
+        (Long.to-int (Long.* (Long.from-int qa) (Long.from-int (/ db g2)))))))
 
   (doc sub "subtracts two `Rational`s `a` and `b`. Like [add](#add) it can
 overflow when the difference in lowest terms is not representable.")
@@ -225,8 +231,14 @@ overflow when the difference in lowest terms is not representable.")
           db @(denominator b)
           g (gcd da db)
           qa (/ da g)
-          qb (/ db g)]
-      (new (- (* na qb) (* nb qa)) (* da qb))))
+          qb (/ db g)
+          t (Long.-
+            (Long.* (Long.from-int na) (Long.from-int qb))
+            (Long.* (Long.from-int nb) (Long.from-int qa)))
+          g2 (gcd g (Long.to-int (Long.mod t (Long.from-int g))))]
+      (new
+        (Long.to-int (Long./ t (Long.from-int g2)))
+        (Long.to-int (Long.* (Long.from-int qa) (Long.from-int (/ db g2)))))))
 
   (doc mul "multiplies two `Rational`s `a` and `b`. Like [add](#add) it can
 overflow when the product in lowest terms is not representable.")
