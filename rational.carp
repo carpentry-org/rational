@@ -337,12 +337,10 @@ exactly even when the quotient itself would overflow: `100000/1 mod 1/100000`
 has quotient `10^10` and remainder `0/1`. When `a` is smaller than `b` in
 magnitude the quotient is zero and `a` is returned unchanged.
 
-The one inexact case is `a` at least as large as `b` in magnitude while the
-magnitude of `numerator(b) * denominator(a)`, with common factors cancelled,
-leaves `Int` range. There the quotient is estimated by cross-multiplication,
-which overflows in turn: `2059044299/195 mod 1285988199/265` is wrong for that
-reason. The denominator of the result always divides the product of the two
-denominators.")
+The result is exact whenever the remainder in lowest terms is representable.
+Otherwise it overflows like [add](#add), even though the remainder is smaller
+than `b` in magnitude. The denominator of the result always divides the product
+of the two denominators.")
   (defn modulo [a b]
     (if (abs-below? a b)
       @a
@@ -355,16 +353,13 @@ denominators.")
             qa (/ nb g1)
             qb (/ da g2)]
         (if (Int.< (neg-abs qa) (Int.neg (Int./ Int.MAX qb)))
-          (let [num (* na db)
-                den (* nb da)]
-            ; Int.MIN / -1 traps on x86, and Int.MIN is its wrapped quotient
-            (sub a
-                 &(mul
-                   &(from-int
-                     (if (and (Int.= den -1) (Int.= num Int.MIN))
-                       Int.MIN
-                       (/ num den)))
-                   b)))
+          (let [t (Long.mod
+                  (Long.* (Long.from-int na) (Long.from-int (/ db g2)))
+                  (Long.* (Long.from-int nb) (Long.from-int qb)))
+                g3 (gcd db (Long.to-int (Long.mod t (Long.from-int db))))]
+            (new
+              (Long.to-int (Long./ t (Long.from-int g3)))
+              (Long.to-int (Long.* (Long.from-int qb) (Long.from-int (/ db g3))))))
           (let [pn (/ na g1)
                 q (* qa qb)
                 m (Int.abs q)

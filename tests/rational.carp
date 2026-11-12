@@ -228,6 +228,18 @@
       &(modulo &(new 715827883 1) &(new 2147483647 3))
       "modulo is exact when the cancelled divisor product just fits")
     (assert-equal test
+      &(new 135727205 159)
+      &(modulo &(new 2059044299 195) &(new 1285988199 265))
+      "modulo is exact when the cancelled divisor product leaves Int range")
+    (assert-equal test
+      &(new 2147483645 1610612736)
+      &(modulo &(new 2147483647 536870912) &(new 8 3))
+      "modulo is exact when a cross product is a multiple of 2^32")
+    (assert-equal test
+      &(new -1114660717 884736)
+      &(modulo &(new -536241943 32768) &(new -407833 81))
+      "modulo of a negative dividend is exact when the divisor product leaves Int range")
+    (assert-equal test
       &(new -2 1)
       &(modulo &(new Int.MIN 1) &(new 3 1))
       "modulo keeps the sign of an Int.MIN numerator")
@@ -316,11 +328,11 @@
       &(modulo &(new Int.MIN 1) &(new Int.MIN 1))
       "modulo of Int.MIN by itself is zero")
     (assert-equal test
-      &(new 0 1)
-      &(modulo &(new Int.MIN 3) &(new 1431655765 7))
+      &(new -1288490189 75)
+      &(modulo &(new Int.MIN 25) &(new 1030792151 15))
       "modulo does not divide Int.MIN by -1 when the fallback products wrap")
     (assert-equal test
-      &(new 0 1)
+      &(new -2147483647 45)
       &(modulo &(new Int.MIN 9) &(new -954437177 15))
       "modulo survives a wrapped Int.MIN over -1 with a negative divisor")
 
